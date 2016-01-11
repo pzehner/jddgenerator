@@ -24,7 +24,7 @@ import os
 #
 
 
-class SessionsJob:
+class SessionsJob(object):
     """ Classe décrivant un travail de création des sessions
     """
 
@@ -101,7 +101,7 @@ class SessionsJob:
                     print "ligne orpheline :", code
 
     def make_sessions(self, sessions_names, sessions_colors, sessions_days,
-            sessions_timings, sessions_presentators):
+            sessions_timings, sessions_presentators, session_class=Session):
         """ Crée les sessions
         """
         sessions_data = zip(
@@ -121,7 +121,7 @@ class SessionsJob:
                 presentation.start = start
                 start += presentation.duration
                 presentation.stop = start
-            sessions.append(Session(
+            sessions.append(session_class(
                 number=session_data[0],
                 color=session_data[1],
                 presentator=session_data[4],

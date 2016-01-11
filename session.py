@@ -69,7 +69,7 @@ except Exception:
 #
 
 
-class Session:
+class Session(object):
     """ Classe d'une session
     """
 
@@ -93,14 +93,14 @@ class Session:
     def __str__(self):
         return unicode(self)
 
-    def __unicode__(self):
+    def __unicode__(self, body_template=session_body_template, header_template=session_header_template):
         # header
-        header_str = session_header_template.substitute(
-                session_color=self.color,
-                session_number=self.number,
-                session_start=self.start.strftime(STRF_TIME),
-                session_stop=self.stop.strftime(STRF_TIME),
-                session_presentator=self.presentator
+        header_str = header_template.substitute(
+                color=self.color,
+                number=self.number,
+                start=self.start.strftime(STRF_TIME),
+                stop=self.stop.strftime(STRF_TIME),
+                presentator=self.presentator
                 )
         # body
         items_str = ""
@@ -111,17 +111,17 @@ class Session:
             else:
                 first = False
             items_str += unicode(item)
-        body_str = session_body_template.substitute(
-                session_items=items_str
+        body_str = body_template.substitute(
+                items=items_str
                 )
         # session
         session_str = session_template.substitute(
-                session_header=header_str,
-                session_body=body_str
+                header=header_str,
+                body=body_str
                 )
         return session_str
 
-class SessionPresentation():
+class SessionPresentation(object):
     """ Classe d'une présentation
     """
 
@@ -151,15 +151,15 @@ class SessionPresentation():
     def __str__(self):
         return unicode(self)
 
-    def __unicode__(self):
-        presentation_str = session_item_template.substitute(
-                session_item_start=self.start.strftime(STRF_TIME),
-                session_item_stop=self.stop.strftime(STRF_TIME),
-                session_item_title=self.phd.title,
-                session_item_presentator=self.student.name,
-                session_item_supervizors=', '.join([unicode(s) for s in self.phd.supervizors]),
-                session_item_grade=self.student.grade,
-                session_item_origin=self.student.department + '/' + self.student.unit \
+    def __unicode__(self, template=session_item_template):
+        presentation_str = template.safe_substitute(
+                start=self.start.strftime(STRF_TIME),
+                stop=self.stop.strftime(STRF_TIME),
+                title=self.phd.title,
+                presentator=self.student.name,
+                supervizors=', '.join([unicode(s) for s in self.phd.supervizors]),
+                grade=self.student.grade,
+                origin=self.student.department + '/' + self.student.unit \
                         if self.student.unit else self.student.department
                 )
         return presentation_str
