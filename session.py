@@ -17,6 +17,8 @@ import locale
 import os
 from jdd import Supervizor, Student, PhD
 
+package_path = os.path.dirname(os.path.realpath(__file__))
+
 
 ##
 # constantes
@@ -46,7 +48,7 @@ locale.setlocale(locale.LC_ALL, b'fr_FR')
 
 
 def load_template(template_file):
-    template_file_path = os.path.join(SESSION_DIRECTORY, template_file)
+    template_file_path = os.path.join(package_path, SESSION_DIRECTORY, template_file)
     with open(template_file_path, 'r', encoding='utf8') as file:
         return file.read()
 
