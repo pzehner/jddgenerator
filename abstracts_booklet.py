@@ -15,13 +15,15 @@ from string import Template
 import os
 from jdd import Student, PhD, Supervizor
 
+package_path = os.path.dirname(os.path.realpath(__file__))
+
 
 ##
 # constantes
 #
 
 
-ABSTRACT_BOOKLET_DIRECTORY = "abstracts_booklet"
+ABSTRACT_BOOKLET_DIRECTORY = "abstracts_booklet_files"
 ABSTRACT_BOOKLET_BODY_FILE = "abstracts_booklet_body.tex"
 ABSTRACT_BOOKLET_HEADER_FILE = "abstracts_booklet_header.tex"
 ABSTRACT_BOOKLET_SEPARATOR_FILE = "abstracts_booklet_separator.tex"
@@ -35,7 +37,7 @@ DEFAULT_PICTURE = "akemi_homura.jpg"
 
 
 def load_template(template_file):
-    template_file_path = os.path.join(ABSTRACT_BOOKLET_DIRECTORY, template_file)
+    template_file_path = os.path.join(package_path, ABSTRACT_BOOKLET_DIRECTORY, template_file)
     with open(template_file_path, 'r', encoding='utf8') as file:
         return file.read()
 
