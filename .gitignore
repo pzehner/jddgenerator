@@ -1,0 +1,5 @@
+# vim stuff
+*.sw*
+
+# python stuff
+*.py[cod]
