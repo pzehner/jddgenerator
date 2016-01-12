@@ -104,6 +104,9 @@ class SessionsJob(object):
             sessions_timings, sessions_presentators, session_class=Session):
         """ Crée les sessions
         """
+        assert len(sessions_names) == len(sessions_colors) == len(sessions_days) \
+                == len(sessions_timings) == len(sessions_presentators), \
+                "Les tableaux de données de session n'ont pas la même taille"
         sessions_data = zip(
                 sessions_names,
                 sessions_colors,
