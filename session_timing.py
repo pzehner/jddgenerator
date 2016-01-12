@@ -89,7 +89,7 @@ class SessionPresentationTiming(SessionPresentation):
         presentation_orig = super(SessionPresentationTiming, self).__unicode__(session_timing_item_template)
         presentation_template = Template(presentation_orig)
         presentation_str = presentation_template.substitute(
-                duration=':'.join([p for p in unicode(self.duration).split(':')[1:3]])
+                duration=unicode(self.duration).split(':')[1] + '~min'
                 )
         return presentation_str
 
