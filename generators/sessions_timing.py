@@ -8,11 +8,11 @@
 
 from __future__ import unicode_literals
 from csv_unicode import unicode_csv_reader
-from session_timing import SessionTiming, SessionPresentationTiming
+from ..models.session_timing import SessionTiming, SessionPresentationTiming
 from codecs import open
 import datetime
 import os
-from sessions_generator import SessionsJob
+from sessions import SessionsJob
 
 
 ##

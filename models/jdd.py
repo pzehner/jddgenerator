@@ -45,6 +45,15 @@ class Student(object):
         else:
             self.location = location
 
+    def __hash__(self):
+        return hash(self.name)
+
+    def __eq__(self, other):
+        return self is other
+
+    def __ne__(self, other):
+        return self is not other
+
 
     def __unicode__(self):
         return "{name} ({department}/{unit}, {grade})".format(
@@ -82,6 +91,15 @@ class PhD(object):
         else:
             self.supervizors = []
 
+    def __hash__(self):
+        return hash(self.title)
+
+    def __eq__(self, other):
+        return self is other
+
+    def __ne__(self, other):
+        return self is not other
+
     def __unicode__(self):
         return self.title
 
@@ -118,6 +136,15 @@ class Supervizor(object):
         self.origin = origin
         self.department = department.strip()
         self.unit = unit.strip()
+
+    def __hash__(self):
+        return hash(self.name)
+
+    def __eq__(self, other):
+        return self is other
+
+    def __ne__(self, other):
+        return self is not other
 
     def __unicode__(self):
         output = self.title + '~' if self.title else ""

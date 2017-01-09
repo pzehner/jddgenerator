@@ -83,12 +83,14 @@ class Session(object):
         self.presentator = presentator
         if presentations and type(presentations) is list:
             presentation0 = presentations[0]
-            if type(presentation0) is tuple:
+            if type(presentation0) in (tuple, list):
                 self.presentations = [SessionPresentation(*p) for p in presentations]
-            else:
+            elif isinstance(presentation0, SessionPresentation):
                 self.presentations = presentations
+            else:
+                raise ValueError("Valeur d'entrée invalide : presentation, " + unicode(type(presentation0)))
         else:
-            self.presentations = ""
+            self.presentations = []
 
     def __str__(self):
         return unicode(self)
@@ -142,8 +144,8 @@ class SessionPresentation(object):
             supervizor.__class__ = SessionPresentationSupervizor
 
         self.duration = duration
-        self.start=start if start is not None else datetime.datetime.today()
-        self.stop=start if stop is not None else datetime.datetime.today()
+        self.start = start if start is not None else datetime.datetime.today()
+        self.stop = stop if stop is not None else datetime.datetime.today()
         self.session = int(session)
         self.day = day
         self.order = int(order)
@@ -157,7 +159,7 @@ class SessionPresentation(object):
                 stop=self.stop.strftime(STRF_TIME),
                 title=self.phd.title,
                 presentator=self.student.name,
-                supervizors=', '.join([unicode(s) for s in self.phd.supervizors]),
+                supervizors=', '.join([unicode(s) for s in set(self.phd.supervizors)]),
                 grade=self.student.grade,
                 origin=self.student.department + '/' + self.student.unit \
                         if self.student.unit else self.student.department

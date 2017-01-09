@@ -15,7 +15,6 @@ from string import Template
 import datetime
 import locale
 import os
-from jdd import Supervizor, Student, PhD
 from session import Session, SessionPresentation
 
 package_path = os.path.dirname(os.path.realpath(__file__))
@@ -30,7 +29,6 @@ SESSION_TIMING_DIRECTORY = "session_timing_files"
 SESSION_TIMING_ITEM_FILE = 'session_timing_item.tex'
 SESSION_TIMING_BODY_FILE = 'session_timing_body.tex'
 SESSION_TIMING_HEADER_FILE = 'session_timing_header.tex'
-STRF_TIME = '{hours}:{minutes}'
 
 
 ##
@@ -89,7 +87,7 @@ class SessionPresentationTiming(SessionPresentation):
         presentation_orig = super(SessionPresentationTiming, self).__unicode__(session_timing_item_template)
         presentation_template = Template(presentation_orig)
         presentation_str = presentation_template.substitute(
-                duration=unicode(self.duration).split(':')[1] + '~min'
+                duration=unicode(int(self.duration.total_seconds() // 60)) + '~min'
                 )
         return presentation_str
 

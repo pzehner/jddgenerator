@@ -51,6 +51,7 @@ except Exception:
     print message
     raise
 
+
 ##
 # paramètres
 #
@@ -66,14 +67,17 @@ class Booklet:
     """
 
     def __init__(self, abstracts):
+        # stocke les abstracts si ce sont des BookletAbstracts
+        # ou les converti à la volée
         if abstracts and type(abstracts) in (list, tuple):
             abstract0 = abstracts[0]
-            if type(abstract0) is tuple:
+            if type(abstract0) in (tuple, list):
                 self.abstracts = [BookletAbstract(*a) for a in abstracts]
             elif isinstance(abstract0, BookletAbstract):
                 self.abstracts = abstracts
             else:
-                raise BookletAbstractError("Valeur d'entrée invalide : abstract, " + unicode(type(abstract0)))
+                raise ValueError("Valeur d'entrée invalide : abstract, " + \
+                        unicode(type(abstract0)))
             self.abstracts.sort(key=lambda e: e.order)
         else:
             self.abstracts = []
@@ -82,12 +86,12 @@ class Booklet:
         return unicode(self)
 
     def __unicode__(self):
-        is_first = True
+        first = True
         document_str = ""
         for abstract in self.abstracts:
-            document_str += abstract_booklet_separator if not is_first else ""
+            document_str += abstract_booklet_separator if not first else ""
             document_str += unicode(abstract)
-            is_first = False
+            first = False
         return document_str
 
 
@@ -152,8 +156,3 @@ class BookletAbstract:
                 body=body_str
                 )
         return document_str
-
-
-class BookletAbstractError(Exception):
-    """ Classe des erreurs
-    """

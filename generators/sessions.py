@@ -8,10 +8,11 @@
 
 from __future__ import unicode_literals
 from csv_unicode import unicode_csv_reader
-from session import Session, SessionPresentation
+from ..models.session import Session, SessionPresentation
 from codecs import open
 import datetime
 import os
+import sys
 
 
 ##
@@ -141,12 +142,13 @@ class SessionsJob(object):
         """
         out_file_pattern = 'session_{0}.tex'
         if not os.path.isdir(out_directory):
-            os.mkdir(out_directory)
+            os.makedirs(out_directory)
         for i, session in enumerate(self.sessions):
             out_file_name = out_file_pattern.format(i + 1)
             out_file_path = os.path.join(out_directory, out_file_name)
             with open(out_file_path, 'w', encoding='utf8') as file:
                 file.write(unicode(session))
+        sys.stdout.write("Output successfuly written in " + out_directory + "\n")
 
 
 ##

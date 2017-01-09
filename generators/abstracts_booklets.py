@@ -10,11 +10,12 @@
 from __future__ import unicode_literals
 from csv_unicode import unicode_csv_reader
 from csv_files import *
-from abstracts_booklet import Booklet, BookletAbstract
+from ..models.abstracts_booklet import Booklet, BookletAbstract
 from codecs import open
 import itertools
 import os
 import glob
+import sys
 
 
 ##
@@ -90,7 +91,8 @@ class AbstractsBookletJob:
                             ],
                         funding=line[li['funding']]
                         ))
-        self.listing = listing
+        self.abstracts = listing
+        self.pictures_path = pictures_path
 
     def add_timings(self, timings_file, timings_index, timings_file_skip_lines=1):
         """ Ajoute les informations de passage depuis un fichier CSV
@@ -102,13 +104,16 @@ class AbstractsBookletJob:
             for line in list(timings_csv)[timings_file_skip_lines:]:
                 code = line[ti['code']]
                 if int(line[ti['day']]):
-                    listing_match = [l for l in self.listing if l.code == code]
+                    listing_match = [l for l in self.abstracts if l.code == code]
                     if listing_match:
                         listing_current = listing_match[0]
                         listing_current.session = int(line[ti['session']])
                         listing_current.order = int(line[ti['order']])
                 else:
-                    print "ligne orpheline :", code
+                    print "ligne orpheline dans {file} : {code}".format(
+                            file=timings_file,
+                            code=code
+                            )
 
     def add_abstracts(self, abstracts_file, abstracts_index, abstracts_file_skip_lines=1):
         """ Ajoute les résumés et les mots clés depuis un fichier CSV
@@ -120,23 +125,26 @@ class AbstractsBookletJob:
             for line in list(abstracts_csv)[abstracts_file_skip_lines:]:
                 code = line[ai['code']]
                 if line[ai['abstract']]:
-                    listing_match = [l for l in self.listing if l.code == code]
+                    listing_match = [l for l in self.abstracts if l.code == code]
                     if listing_match:
                         listing_curent = listing_match[0]
                         listing_curent.abstract = line[ai['abstract']]
                         listing_curent.keywords = [l.strip() for l in line[ai['keywords']].replace(';', ',').split(',')]
                 else:
-                    print "ligne orpheline :", code
+                    print "ligne orpheline dans {file} : {code}".format(
+                            file=abstracts_file,
+                            code=code
+                            )
 
     def make_booklets(self, sessions_colors):
         """ Crée les livrets
         """
-        for abstract in self.listing:
+        for abstract in self.abstracts:
             abstract.color = sessions_colors[abstract.session - 1]
 
         # répartition en sessions
-        self.listing.sort(key=lambda e: (e.session, e.order))
-        sessions = itertools.groupby(self.listing, key=lambda e: e.session)
+        self.abstracts.sort(key=lambda e: (e.session, e.order))
+        sessions = itertools.groupby(self.abstracts, key=lambda e: e.session)
 
         # création des livrets
         booklets = []
@@ -149,13 +157,25 @@ class AbstractsBookletJob:
         """ Écrire les résultats
         """
         out_file_pattern = 'abstracts_{0}.tex'
+        # créer le dossier de sortie s'il n'existe pas
         if not os.path.isdir(out_directory):
-            os.mkdir(out_directory)
+            os.makedirs(out_directory)
+
+        # linker le dossier de photos
+        pictures_path_link = os.path.join(out_directory, self.pictures_path)
+        pitcures_path_origin = os.path.join(os.getcwd(), self.pictures_path)
+        if not os.path.isdir(pictures_path_link):
+            os.symlink(
+                    pitcures_path_origin,
+                    pictures_path_link
+                    )
+
         for i, booklet in enumerate(self.booklets):
             out_file_name = out_file_pattern.format(i + 1)
             out_file_path = os.path.join(out_directory, out_file_name)
             with open(out_file_path, 'w', encoding='utf8') as file:
                 file.write(unicode(booklet))
+        sys.stdout.write("Sortie correctement enregistrée dans " + out_directory + "\n")
 
 
 ##
