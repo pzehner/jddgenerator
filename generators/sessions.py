@@ -41,7 +41,7 @@ class SessionsJob(object):
                     listing.append(SessionPresentation(
                         code=line[li['code']],
                         title=line[li['title']],
-                        presentator=line[li['first_name']] + ' ' + line[li['name']].title(),
+                        chairman=line[li['first_name']] + ' ' + line[li['name']].title(),
                         grade=line[li['grade']],
                         department=line[li['department']],
                         unit=line[li['unit']],
@@ -102,18 +102,18 @@ class SessionsJob(object):
                     print "ligne orpheline :", code
 
     def make_sessions(self, sessions_names, sessions_colors, sessions_days,
-            sessions_timings, sessions_presentators, session_class=Session):
+            sessions_timings, sessions_chairmans, session_class=Session):
         """ Crée les sessions
         """
         assert len(sessions_names) == len(sessions_colors) == len(sessions_days) \
-                == len(sessions_timings) == len(sessions_presentators), \
+                == len(sessions_timings) == len(sessions_chairmans), \
                 "Les tableaux de données de session n'ont pas la même taille"
         sessions_data = zip(
                 sessions_names,
                 sessions_colors,
                 sessions_days,
                 sessions_timings,
-                sessions_presentators
+                sessions_chairmans
                 )
 
         sessions = []
@@ -128,7 +128,7 @@ class SessionsJob(object):
             sessions.append(session_class(
                 number=session_data[0],
                 color=session_data[1],
-                presentator=session_data[4],
+                chairman=session_data[4],
                 start=datetime.datetime.combine(session_data[2], session_data[3]),
                 stop=start,
                 day=session_data[2],
@@ -165,7 +165,7 @@ def make_sessions(
         sessions_colors,
         sessions_days,
         sessions_timings,
-        sessions_presentators,
+        sessions_chairmans,
         out_directory,
         **kwargs
         ):
@@ -189,7 +189,7 @@ def make_sessions(
             sessions_colors,
             sessions_days,
             sessions_timings,
-            sessions_presentators
+            sessions_chairmans
             )
     sessions_job.write_output(
             out_directory

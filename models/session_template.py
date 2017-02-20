@@ -1,21 +1,7 @@
-#-*- coding: utf8 -*-
-
-""" Classe pour la génération du programme des JDD
-"""
-
-
-##
-# imports
-#
-
-
-from __future__ import unicode_literals
+import os
+import locale
 from codecs import open
 from string import Template
-import datetime
-import locale
-import os
-from jdd import Supervizor, Student, PhD
 
 package_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -39,7 +25,7 @@ STRF_TIME = "%H:%M"
 #
 
 
-locale.setlocale(locale.LC_ALL, b'fr_FR')
+locale.setlocale(locale.LC_ALL, ('fr_FR', 'utf8'))
 
 
 ##
@@ -64,34 +50,7 @@ except Exception:
     raise
 
 
-##
-# classes
-#
-
-
-class Session(object):
-    """ Classe d'une session
-    """
-
-    def __init__(self, number, color, presentator, presentations, \
-            day=None, start=None, stop=None):
-        self.number = number
-        self.color = color
-        self.day = day
-        self.start = start if start is not None else datetime.datetime.today()
-        self.stop = stop if stop is not None else datetime.datetime.today()
-        self.presentator = presentator
-        if presentations and type(presentations) is list:
-            presentation0 = presentations[0]
-            if type(presentation0) in (tuple, list):
-                self.presentations = [SessionPresentation(*p) for p in presentations]
-            elif isinstance(presentation0, SessionPresentation):
-                self.presentations = presentations
-            else:
-                raise ValueError("Valeur d'entrée invalide : presentation, " + unicode(type(presentation0)))
-        else:
-            self.presentations = []
-
+class Session:
     def __str__(self):
         return unicode(self)
 
@@ -102,7 +61,7 @@ class Session(object):
                 number=self.number,
                 start=self.start.strftime(STRF_TIME),
                 stop=self.stop.strftime(STRF_TIME),
-                presentator=self.presentator
+                chairman=self.chairman
                 )
         # body
         items_str = ""
@@ -123,33 +82,8 @@ class Session(object):
                 )
         return session_str
 
-class SessionPresentation(object):
-    """ Classe d'une présentation
-    """
 
-    def __init__(self, code, title, presentator, grade, department, unit, supervizors, \
-            duration=None, start=None, stop=None, session=0, day=None, order=0):
-        self.code = code
-        self.student = Student(
-                name=presentator,
-                grade=grade,
-                department=department,
-                unit=unit
-                )
-        self.phd = PhD(
-                title=title,
-                supervizors=supervizors
-                )
-        for supervizor in self.phd.supervizors:
-            supervizor.__class__ = SessionPresentationSupervizor
-
-        self.duration = duration
-        self.start = start if start is not None else datetime.datetime.today()
-        self.stop = stop if stop is not None else datetime.datetime.today()
-        self.session = int(session)
-        self.day = day
-        self.order = int(order)
-
+class SessionPresentation:
     def __str__(self):
         return unicode(self)
 
@@ -158,7 +92,7 @@ class SessionPresentation(object):
                 start=self.start.strftime(STRF_TIME),
                 stop=self.stop.strftime(STRF_TIME),
                 title=self.phd.title,
-                presentator=self.student.name,
+                chairman=self.student.name,
                 supervizors=', '.join([unicode(s) for s in set(self.phd.supervizors)]),
                 grade=self.student.grade,
                 origin=self.student.department + '/' + self.student.unit \
@@ -166,10 +100,8 @@ class SessionPresentation(object):
                 )
         return presentation_str
 
-class SessionPresentationSupervizor(Supervizor):
-    """ Classe des encadrants et directeurs
-    """
 
+class SessionPresentationSupervizor:
     def __unicode__(self):
         string = ""
         string += self.title + '~' if self.title else ''

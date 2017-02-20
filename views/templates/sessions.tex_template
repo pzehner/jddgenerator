@@ -1,0 +1,39 @@
+\begin{center}
+  \begin{session}{\var{ number }}{\var{ color|color }}{\var{ start|time} -- \var{ stop|time }}{\var{ chairman }}
+    \block{ for presentation in presentations }
+    \presentation{%
+      \var{ presentation.start|time }%
+    }{%
+      \var{ presentation.stop|time }%
+    }{%
+      \var{ presentation.phd.title }%
+    }{%
+      \var{ presentation.phd.student.name }%
+    }{%
+      \var{ presentation.phd.student.department }%
+      \block{ if presentation.phd.student.unit }
+      /\var{ presentation.phd.student.unit}%
+      \block{ endif }
+    }{%
+      \block{ for supervizor in presentation.phd.supervizors }
+      \block{ if supervizor.title }
+      \var{ supervizor.title }~%
+      \block{ endif }
+      \var{ supervizor.name }%
+      \block{ if supervizor.origin }
+      ~({\small \var{ supervizor.origin }})%
+      \block{ endif }
+      \block{ if not loop.last }
+      , %
+      \block{ endif }
+      \block{ endfor }
+    }{%
+      \var{ presentation.phd.student.grade }
+    }
+
+    \block{ if not loop.last }
+    \midrule
+    \block{ endif }
+    \block{ endfor }
+  \end{session}
+\end{center}

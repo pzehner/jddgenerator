@@ -99,12 +99,12 @@ class BookletAbstract:
     """ Classe pour un résumé court
     """
 
-    def __init__(self, code, title, presentator, grade, department, \
+    def __init__(self, code, title, chairman, grade, department, \
             unit, location, email, picture, supervizors, directors, funding, \
             keywords=[], abstract="", color="", order=0):
         self.code = code
         self.student = Student(
-                name=presentator,
+                name=chairman,
                 grade=grade,
                 department=department,
                 unit=unit,

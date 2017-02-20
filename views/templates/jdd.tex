@@ -1,0 +1,166 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[francais]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{sans}
+\usepackage{microtype}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{lipsum}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{eso-pic}
+\usepackage[hidelinks]{hyperref}
+\usepackage{url}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{adjustbox}
+\usepackage{calc}
+\usepackage{ifthen}
+\usepackage{placeins}
+\usepackage{import}
+\usepackage{setspace}
+\usepackage{afterpage}
+
+% créer une page complètement vide
+\newcommand\blankpage{%
+    \null
+    \thispagestyle{empty}%
+    \addtocounter{page}{-1}%
+    \newpage}
+
+% types de colonnes
+\newcolumntype{C}[1]{>{\centering\arraybackslash}m{#1}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}m{#1}}
+
+% désactiver le rajout d'espaces pour la ponctuation
+\frenchbsetup{AutoSpacePunctuation=false}
+
+% suppression des alinéas
+\setlength\parindent{0pt}
+
+% variables de longueur
+\newlength{\picturelength}
+\setlength{\picturelength}{3cm}
+\newlength{\tablelength}
+\setlength{\tablelength}{\textwidth-\picturelength-\tabcolsep}
+
+% macro pour retailler une image en carré lors de l'insertion
+\newlength{\oH}
+\newlength{\oW}
+\newlength{\cH}
+\newcommand\clipgraphics[2]{% height, image
+  \settototalheight{\oH}{\includegraphics{#2}}%
+  \settowidth{\oW}{\includegraphics{#2}}%
+  \ifthenelse{\lengthtest{\oH > \oW}}{%
+    \setlength{\cH}{(\oH - \oW)}%
+    \includegraphics[width=#1,clip,trim=0 0.5\cH{} 0 0.5\cH{}]{#2}%
+  }{%
+    \includegraphics[width=#1]{#2}%
+  }%
+}
+
+% macro pour les événements dans le programme
+\newcommand{\event}[4]{%
+  % #1 nom de l'événement
+  % #2 couleur
+  % #3 texte à afficher à gauche
+  % #4 textà afficher à droite
+  \begin{center}
+    {%
+      \def\arraystretch{1.75}
+      \begin{tabularx}{\textwidth}{%
+          >{\columncolor[rgb]{#2}[\tabcolsep][0.5\tabcolsep]}C{2.1cm}%
+          >{\columncolor[rgb]{#2}[0.5\tabcolsep][\tabcolsep]}X%
+        }
+        \textbf{\large{#1}} & \textbf{\large{#3 \hfill \emph{#4}}}
+      \end{tabularx}
+    }
+  \end{center}
+}
+
+% environnement pour les sessions
+\newenvironment{session}[4]{%
+  % #1 numéro
+  % #2 couleur
+  % #3 début-fin
+  % #4 chairman
+  \event{Session #1}{#2}{#3}{#4}
+  \vspace{0.1cm}
+
+  \tabularx{\textwidth}{C{1.9cm}Xl}
+}{
+  \bottomrule
+  \endtabularx
+}
+
+% macro pour une présentation de  session
+\newcommand{\presentation}[7]{%
+  % #1 début
+  % #2 fin
+  % #3 sujet
+  % #4 doctorant
+  % #5 département/unité
+  % #6 encadrants, directeurs
+  % #7 année de thèse
+  {\small #1 -- #2} & \textbf{#3}~--~\emph{#4} \par {\small #5~--~#6} & {\small #7} \\
+}
+
+\begin{document}
+
+\def\tabularxcolumn#1{m{#1}}
+
+%%
+% Programme synoptique
+%
+
+\section*{Programme des JDD}
+
+\vfill
+
+\begin{center}
+
+% \def\svgwidth{0.9\textwidth}
+% \subimport{../planning/}{planning.pdf_tex}
+
+\end{center}
+
+\vfill\null
+
+\newpage
+
+%%
+% Programme des sessions
+%
+
+% on importe le fichier utilisateur s'il existe, sinon, on utilise le fichier
+% généré
+% si aucun des deux n'existe, on n'importe rien
+\IfFileExists{./sessions/sessions_container.tex}{%
+  \subimport{sessions/}{sessions_container.tex}
+}{%
+  \IfFileExists{./sessions/sessions_container.tex.sample}{%
+    \subimport{sessions/}{sessions_container.tex.sample}
+  }{%
+    \message{Pas de fichiers de sessions}
+  }
+}
+
+\newpage
+
+%%
+% Résumés courts
+%
+
+\def\tabularxcolumn#1{>{\raggedright\arraybackslash}m{#1}}
+
+\setstretch{0.95}
+
+% \subimport{../abstracts_booklets/}{abstracts_booklets_content}
+
+
+\end{document}

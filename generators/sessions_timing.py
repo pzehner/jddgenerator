@@ -41,7 +41,7 @@ class SessionsTimingJob(SessionsJob):
                     listing.append(SessionPresentationTiming(
                         code=line[li['code']],
                         title=line[li['title']],
-                        presentator=line[li['first_name']] + ' ' + line[li['name']].title(),
+                        chairman=line[li['first_name']] + ' ' + line[li['name']].title(),
                         grade=line[li['grade']],
                         department=line[li['department']],
                         unit=line[li['unit']],
@@ -66,7 +66,7 @@ def make_sessions_timing(
         sessions_colors,
         sessions_days,
         sessions_timings,
-        sessions_presentators,
+        sessions_chairmans,
         out_directory,
         **kwargs
         ):
@@ -90,7 +90,7 @@ def make_sessions_timing(
             sessions_colors,
             sessions_days,
             sessions_timings,
-            sessions_presentators
+            sessions_chairmans
             )
     sessions_timing_job.write_output(
             out_directory

@@ -47,7 +47,7 @@ class AbstractsBookletJob:
                     listing.append(BookletAbstract(
                         code=line[li['code']],
                         title=line[li['title']],
-                        presentator=line[li['first_name']] + ' ' + line[li['name']].title(),
+                        chairman=line[li['first_name']] + ' ' + line[li['name']].title(),
                         grade=line[li['grade']],
                         department=line[li['department']],
                         unit=line[li['unit']],
