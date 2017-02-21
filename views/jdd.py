@@ -22,7 +22,7 @@ MAIN_TEMPLATE = 'jdd.tex'
 MAIN_PATTERN = 'jdd.tex'
 
 
-class JddView:
+class JddView(object):
     """ Vue pour la génération des conteneurs des différents documents des JDD
 
         La vue crée les fichier LaTeX conteneurs qui importent les autres

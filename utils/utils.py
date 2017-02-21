@@ -19,7 +19,7 @@ def read_tuple(string, kind=float):
             kind (:obj:`type`): type de valeur attendue.
 
         Return:
-            (:obj:`tuple`): tuple des valeurs parsées
+            (:obj:`generator`): tuple des valeurs parsées
     """
     return (kind(v) for v in string.split(','))
 

@@ -16,7 +16,7 @@ from ..views.jdd import JddView
 class BasicController(object):
     logger = logging.getLogger('controllers.jdd.BasicController')
 
-    def _write_text(self, text, directory):
+    def write(self, text, directory):
         """ Écrit une liste de données formatées dans un fichier texte
 
             Args:
@@ -24,6 +24,13 @@ class BasicController(object):
                     fichier et le contenu texte.
                 directory (unicode): dossier où enregistrer les fichiers.
         """
+        if isinstance(text, list):
+            # écrire les fichiers
+            for text_item in text:
+                self.write(text_item, directory)
+
+            return
+
         # créer le dossier de sortie
         if not os.path.isdir(directory):
             os.makedirs(directory)
@@ -76,7 +83,4 @@ class JddController(BasicController):
         main = view.retrieve()
 
         # écrire le résulat
-        self._write_text(main, directory)
-
-
-
+        self.write(main, directory)

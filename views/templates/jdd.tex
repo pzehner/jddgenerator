@@ -120,18 +120,19 @@
 
 \section*{Programme des JDD}
 
-\vfill
-
-\begin{center}
-
-% \def\svgwidth{0.9\textwidth}
-% \subimport{../planning/}{planning.pdf_tex}
-
-\end{center}
-
-\vfill\null
-
-\newpage
+%\vfill
+%
+%\begin{center}
+%
+%% importer ici le fichier de planning visuel
+%\def\svgwidth{0.9\textwidth}
+%\subimport{./planning_visual/}{planning.pdf_tex}
+%
+%\end{center}
+%
+%\vfill\null
+%
+%\newpage
 
 %%
 % Programme des sessions
@@ -140,13 +141,13 @@
 % on importe le fichier utilisateur s'il existe, sinon, on utilise le fichier
 % généré
 % si aucun des deux n'existe, on n'importe rien
-\IfFileExists{./sessions/sessions_container.tex}{%
-  \subimport{sessions/}{sessions_container.tex}
+\IfFileExists{./planning/planning.tex}{%
+  \subimport{planning/}{planning.tex}
 }{%
-  \IfFileExists{./sessions/sessions_container.tex.sample}{%
-    \subimport{sessions/}{sessions_container.tex.sample}
+  \IfFileExists{./planning/planning.tex.sample}{%
+    \subimport{planning/}{planning.tex.sample}
   }{%
-    \message{Pas de fichiers de sessions}
+    \message{Pas de fichiers de planning}
   }
 }
 

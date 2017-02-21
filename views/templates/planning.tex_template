@@ -1,0 +1,30 @@
+% recopier ce fichier avec le nom `sessions_container.tex` pour le modifier,
+% sinon il sera regénéré à chaque appel de `jdd_generator`.
+
+\block{ for event in events }
+\block{ if loop.first or event.day.day != events[loop.index - 2].day.day }
+\block{ if not loop.first }
+\newpage
+
+\block{ endif }
+\subsection*{\var{ event.day|date|capitalize }}
+
+\block{ endif }
+\block{ if event.event_type == 'session' }
+\input{\var{ event.file_name }}
+%\newpage
+
+\block{ else }
+\event{%
+  \block{ if event.name|length >= 10 }\normalsize\block{ endif }%
+  \var{ event.name }\block{ if event.number }~\var{ event.number }\block{ endif }%
+}{%
+  \var{ event.color|color }%
+}{%
+  \var{ event.start|time } -- \var{ event.stop|time }%
+}{%
+  \var{ event.chairman }%
+}
+
+\block{ endif }
+\block{ endfor }
