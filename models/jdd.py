@@ -130,7 +130,7 @@ class PhD(object):
         self.funding = funding
         self.directors = []
         self.supervizors = []
-        self.student = Student()
+        self.student = None
 
     def __unicode__(self):
         if len(self.title) > 30:
@@ -184,7 +184,7 @@ class PhD(object):
             phd=self
             ))
 
-        self.student = Student()
+        self.student = None
         return student
 
     def add_director(self, director):

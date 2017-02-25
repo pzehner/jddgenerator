@@ -176,7 +176,7 @@ class Presentation(object):
             ):
 
         self.code = code
-        self.phd = PhD()
+        self.phd = None
         self.duration = duration
         self.start = start or datetime.today()
         self.stop = stop or datetime.today()
@@ -222,5 +222,5 @@ présentation "{presentation}"'.format(
             presentation=self
             ))
 
-        self.phd = PhD()
+        self.phd = None
         return phd
