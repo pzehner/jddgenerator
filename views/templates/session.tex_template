@@ -15,7 +15,7 @@
       /\var{ presentation.phd.student.unit}%
       \block{ endif }
     }{%
-      \block{ for supervizor in presentation.phd.supervizors }
+      \block{ for supervizor in presentation.phd.supervizors + presentation.phd.directors }
       \block{ if supervizor.title }
       \var{ supervizor.title }~%
       \block{ endif }
