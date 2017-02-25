@@ -21,19 +21,20 @@ DATETIME_FORMAT = DATE_FORMAT + ' ' + TIME_FORMAT
 
 
 class PlanningController(BasicController):
-    """ Contrôleur pour la génération des fichiers de planning
+    """Contrôleur pour la génération des fichiers de planning.
 
-        Le contrôleur donne accès aux méthodes pour la génération des fichiers
-        de planning. La méthode `create` récupère les données des fichiers
-        d'entrée, puis les ordonne avec les classes des modèles. La méthode
-        `retrieve` exporte les données stockées par la vue.
+    Le contrôleur donne accès aux méthodes pour la génération des fichiers de
+    planning. La méthode `create` récupère les données des fichiers d'entrée,
+    puis les ordonne avec les classes des modèles. La méthode `retrieve` exporte
+    les données stockées par la vue.
 
-        Attributes:
-            logger (:obj:`logging.Logger`): logger pour toute la classe.
-            presentations (:obj:`list` of :obj:`Presentation`): liste
-                des présentations (n'a pas vraiment de sens en tant qu'attribut,
-                mais ça permet de faciliter le passage de cette variable).
-            events (:obj:`list` of :obj:`Event`): liste des évents.
+    Attributes:
+        logger (:obj:`logging.Logger`): logger pour toute la classe.
+        presentations (:obj:`list` of :obj:`Presentation`): liste des
+            présentations (n'a pas vraiment de sens en tant qu'attribut, mais ça
+            permet de faciliter le passage de cette variable).
+        events (:obj:`list` of :obj:`Event`): liste des évents.
+
     """
     logger = logging.getLogger('controllers.planning.PlanningController')
 
@@ -42,19 +43,19 @@ class PlanningController(BasicController):
         self.events = []
 
     def create(self, planning_file, students_file, repartitions_file):
-        """ Crée la structure de donnée depuis les différents fichiers
-            d'entrée.
+        """Crée la structure de donnée depuis les différents fichiers d'entrée.
 
-            Args:
-                planning_file (unicode): fichies de configuration des événements
-                    qui contient pour chaque évent leur jour, heure, chairman
-                    et couleur d'affichage sur le programme.
-                students_file (unicode): fichier de configuration pour charger
-                    le listing CVS des doctorants, qui doit contenir les sujets,
-                    les doctorants et les encadrants.
-                repartitions_file (unicode): fichier de configuration pour charger
-                    le listing CVS des timings, qui contient l'affectation de
-                    chaque présentation dans les sessions.
+        Args:
+            planning_file (unicode): fichies de configuration des événements qui
+                contient pour chaque évent leur jour, heure, chairman et couleur
+                d'affichage sur le programme.
+            students_file (unicode): fichier de configuration pour charger le
+                listing CVS des doctorants, qui doit contenir les sujets, les
+                doctorants et les encadrants.
+            repartitions_file (unicode): fichier de configuration pour charger
+                le listing CVS des timings, qui contient l'affectation de chaque
+                présentation dans les sessions.
+
         """
         # créer les évents
         self._create_events(planning_file)
@@ -72,16 +73,16 @@ class PlanningController(BasicController):
         self._sort_presentations()
 
     def _create_events(self, planning_file):
-        """ Extraire les données du planning
+        """Extraire les données du planning.
 
-            Args:
-                planning_file (unicode): chemin vers le fichier de configuration
-                    pour charger la liste CSV des entrées du planning. À son
-                    niveau, les sessions, les pauses ou les discours sont des
-                    évents. Dans le contrôleur, les sessions sont traitées à
-                    part (parce qu'elles contiennent des présentations, qui
-                    elles-mêmes contiennent d'autres éléments, ce nécessite un
-                    traitement séparé).
+        Args:
+            planning_file (unicode): chemin vers le fichier de configuration
+                pour charger la liste CSV des entrées du planning. À son niveau,
+                les sessions, les pauses ou les discours sont des évents. Dans
+                le contrôleur, les sessions sont traitées à part (parce qu'elles
+                contiennent des présentations, qui elles-mêmes contiennent
+                d'autres éléments, ce nécessite un traitement séparé).
+
         """
         # lire le fichier CSV
         planning = CSVDict()
@@ -165,12 +166,12 @@ class PlanningController(BasicController):
                 ))
 
     def _create_presentations(self, students_file):
-        """ Extraire les données de présentations
+        """Extraire les données de présentations.
 
-            Args:
-                students_file (unicode): fichier de configuration pour charger
-                    la liste CSV des doctorants, qui doit contenir les sujets,
-                    les doctorants et les encadrants.
+        Args:
+            students_file (unicode): fichier de configuration pour charger la
+                liste CSV des doctorants, qui doit contenir les sujets, les
+                doctorants et les encadrants.
         """
         # lire le fichier CSV
         students = CSVDict()
@@ -272,12 +273,12 @@ class PlanningController(BasicController):
                     ))
 
     def _apply_repartitions(self, repartitions_file):
-        """ Extraire les données de repartitions
+        """Extraire les données de repartitions.
 
-            Args:
-                repartitions_file (unicode): fichier de configuration pour
-                    charger la liste CSV des repartitions, qui contient
-                    l'affectation de chaque présentation dans les sessions.
+        Args:
+            repartitions_file (unicode): fichier de configuration pour charger
+                la liste CSV des repartitions, qui contient l'affectation de
+                chaque présentation dans les sessions.
         """
         # lire les fichiers CSV
         repartitions = CSVDict()
@@ -294,8 +295,8 @@ class PlanningController(BasicController):
             # Si aucune présentation ne correspond au code, logger l'erreur et
             # continuer.
             if presentation is None:
-                self.logger.warning("La ligne de timing \"{code}\" \
-ne correspond à aucun code de présentation".format(
+                self.logger.warning("La ligne de répartiton des timings \
+\"{code}\" \ ne correspond à aucune présentation".format(
                     code=code
                     ))
 
@@ -324,13 +325,20 @@ n'est attribuée à aucun jour".format(
 
 
     def _sort_events(self):
-        """ Trier les évents
+        """Trier les évents
+
+        Les évents sont triés par date de début.
+
         """
         # ordonner les évents par heure de début
         self.events.sort(key=lambda s: s.start)
 
     def _sort_presentations(self):
-        """ Affecte les présentations aux sessions et les trie
+        """Affecte les présentations aux sessions et les trie
+
+        Au sein de chaque session, les présentations ston triées par leur numéro
+        d'ordre, puis leur date de début et de fin leur sont uttribuées.
+
         """
         # répartir les présentations par session et les trier par ordre
         for session in self.events:
@@ -373,25 +381,27 @@ n'est attribuée à aucun jour".format(
                         ))
 
     def _get_presentations_by_session_number(self, number):
-        """ Retourne une liste de présentations de la même session
+        """Retourne une liste de présentations de la même session.
 
-            Args:
-                number (int): numéro de session.
+        Args:
+            number (int): numéro de session.
 
-            Returns:
-                :obj:`list` of :obj:`Presentation`: liste
-                de présentations associées à cette session.
+        Returns:
+            :obj:`list` of :obj:`Presentation`: liste de présentations associées
+            à cette session.
+
         """
         return [p for p in self.presentations if p.session == number]
 
     def _get_presentation_by_code(self, code):
-        """ Retourne une présentation par son code
+        """Retourne une présentation par son code.
 
-            Args:
-                code (str): code unique de la présentation.
+        Args:
+            code (str): code unique de la présentation.
 
-            Returns:
-                :obj:`Presentation`: présentation correspondante.
+        Returns:
+            :obj:`Presentation`: présentation correspondante.
+
         """
         for presentation in self.presentations:
             if presentation.code == code:
@@ -400,11 +410,11 @@ n'est attribuée à aucun jour".format(
         return None
 
     def retrieve(self, directory):
-        """ Donne une représentation des sessions en passant par la vue
+        """Donne une représentation des sessions en passant par la vue.
 
-            Args:
-                directory (unicode): dossier de sortie où enregistrer les
-                    fichiers.
+        Args:
+            directory (unicode): dossier de sortie où enregistrer les fichiers.
+
         """
         # on crée une vue et lui passe les données
         view = PlanningView()

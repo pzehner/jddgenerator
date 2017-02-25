@@ -8,50 +8,55 @@ from codecs import open
 
 
 class CSVDict:
-    """ Classe permettant de manipuler un fichier CSV comme une liste de
-        dictionnaires
+    """Classe permettant de manipuler un fichier CSV comme une liste de
+    dictionnaires.
 
-        À la place d'ouvrir le fichier CSV directement, on ouvre un fichier INI
-        compagnon qui perment de manipuler le fichier CSV.
+    À la place d'ouvrir le fichier CSV directement, on ouvre un fichier INI
+    compagnon qui perment de manipuler le fichier CSV.
 
-        Pour utiliser un objet `CSVDict`, il faut créer une instance de la
-        classe puis lui demander de lire ce fichier INI :
+    Pour utiliser un objet `CSVDict`, il faut créer une instance de la classe
+    puis lui demander de lire ce fichier INI :
 
-        >>> csv_dict = CSVDict()
-        >>> csv_dict.read('my_ini_file.ini')
+    >>> csv_dict = CSVDict() >>> csv_dict.read('my_ini_file.ini')
 
-        Si le fichier est correct et que tout se passe bien, on peut alors pour
-        chaque ligne du fichier accéder à une colonne par son nom :
+    Si le fichier est correct et que tout se passe bien, on peut alors pour
+    chaque ligne du fichier accéder à une colonne par son nom :
 
-        >>> csv_dict[0]['column_name']
+    >>> csv_dict[0]['column_name']
 
-        Ce qui donne la colonne `column_name` de la première ligne (noter que le
-        numéro des lignes commence à 0).
+    Ce qui donne la colonne `column_name` de la première ligne (noter que le
+    numéro des lignes commence à 0).
 
-        Le fichier compagnon contient deux sections.
+    Le fichier compagnon contient deux sections.
 
-        La section `[info]` contient plusieurs paramètres pour ouvrir le fichier
-        CSV :
-            `file`: chemin vers le fichier CSV. Le chemin est relatif à la
-                position du fichier INI.
-            `skip`: le nombre de lignes à ignorer au début du fichier CSV. Par
-                défaut, la valeur est à 0, c'est-à-dire qu'aucune ligne n'est
-                ignorée.
-            `delimiter`: le caractère utilisé dans le fichier CSV pour séparer
-                les colonnes. Par défaut, il désigne une tabulation.
+    La section `[info]` contient plusieurs paramètres pour ouvrir le fichier
+    CSV :
+        `file`: chemin vers le fichier CSV. Le chemin est relatif à la position
+            du fichier INI.
+        `skip`: le nombre de lignes à ignorer au début du fichier CSV. Par
+            défaut, la valeur est à 0, c'est-à-dire qu'aucune ligne n'est
+            ignorée.
+        `delimiter`: le caractère utilisé dans le fichier CSV pour séparer les
+            colonnes. Par défaut, il désigne une tabulation.
 
-        La section `[fields]` contient l'assoctiation entre les colonnes et leur
-        nom. Pour chaque ligne, la valeur à gauche représente le nom de la
-        colonne et la valeur à droite son index. L'index peut être soit sous
-        forme numérique en commençant à 0, soit sous forme de lettres, comme
-        dans un tableur (A, B, ... AA, AB).
+    La section `[fields]` contient l'assoctiation entre les colonnes et leur
+    nom. Pour chaque ligne, la valeur à gauche représente le nom de la colonne
+    et la valeur à droite son index. L'index peut être soit sous forme numérique
+    en commençant à 0, soit sous forme de lettres, comme dans un tableur (A, B,
+    ... AA, AB).
 
-        Attributes:
-            skip (int): nombre de lignes à ignorer au début du fichier CSV.
-            delimiter (unicode): caractère de séparation entre les colonnes.
-            data (list of dict): contenu du fichier CSV parsé. Chaque colonne
-                est accessible par le nom de son champ. Ce champ est
-                réinitialisé à chaque appel de la méthode `read`.
+    Par rapport à `csv.DictReader`, l'avantage de cette classe est qu'elle ne
+    dépend pas des entêtes du fichier CSV qui pourraient être renommées.  En
+    revanche, elle oblige la présence du fichier INI compagnon. En outre, cette
+    classe gère directement l'encodage UTF-8 pour les fichiers CSV.
+
+    Attributes:
+        skip (int): nombre de lignes à ignorer au début du fichier CSV.
+        delimiter (unicode): caractère de séparation entre les colonnes.
+        data (list of dict): contenu du fichier CSV parsé. Chaque colonne est
+            accessible par le nom de son champ. Ce champ est réinitialisé à
+            chaque appel de la méthode `read`.
+
     """
     def __init__(self):
         self.skip = 0
@@ -59,30 +64,31 @@ class CSVDict:
         self.data = []
 
     def read(self, config_file):
-        """ Lire un fichier compagnon et par suite son fichier CSV
+        """Lire un fichier compagnon et par suite son fichier CSV.
 
-            Args:
-                config_file (unicode): chemin vers le fichier INI compagnon.
+        Args:
+            config_file (unicode): chemin vers le fichier INI compagnon.
+
         """
         csv_file, fields = self._read_config(config_file)
         data = self._read_csv(csv_file)
         self._parse(data, fields)
 
     def _read_config(self, config_file):
-        """ Lire le fichier INI compagnon
+        """Lire le fichier INI compagnon.
 
-            Args:
-                config_file (unicode): chemin vers le fichier INI compagnon.
+        Args:
+            config_file (unicode): chemin vers le fichier INI compagnon.
 
-            Returns:
-                (tuple): nom du fichier CSV à ouvrir et liste des champs sous
-                forme de tuple clé valeur.
+        Returns:
+            tuple: nom du fichier CSV à ouvrir et liste des champs sous forme de
+            tuple clé valeur.
+
         """
         # vérifier l'existence du fichier de config
         if not os.path.isfile(config_file):
             raise IOError("Impossible de trouver le fichier \
 compagnon '{}'".format(config_file))
-
 
         # vérifier que le fichier est un fichier INI
         if os.path.splitext(config_file)[1].lower() != '.ini':
@@ -121,13 +127,14 @@ clé 'file' dans la section 'info'")
         return file_name, fields
 
     def _read_csv(self, csv_file):
-        """ Lire le fichier CSV de données
+        """Lire le fichier CSV de données.
 
-            Args:
-                csv_file (unicode): chemin vers le fichier CSV.
+        Args:
+            csv_file (unicode): chemin vers le fichier CSV.
 
-            Returns:
-                (list): liste des données sous forme de list pour chaque ligne.
+        Returns:
+            :obj:`list`: liste des données sous forme de list pour chaque ligne.
+
         """
         # vérifier l'existence du fichier csv
         if not os.path.isfile(csv_file):
@@ -146,13 +153,13 @@ CSV '{}'".format(csv_file))
                     )[self.skip:]
 
     def _parse(self, data, fields):
-        """ Applique la liste des champs sur les données pour obtenir une liste
-            de dictionnaires
+        """Applique la liste des champs sur les données pour obtenir une liste
+        de dictionnaires.
 
-            Args:
-                data (list): liste des données sous forme de list pour chaque
-                    ligne.
-                fields (list): liste des champs sous forme de tuple clé valeur.
+        Args:
+            data (list): liste des données sous forme de list pour chaque ligne.
+            fields (list): liste des champs sous forme de tuple clé valeur.
+
         """
         # préparer la liste des index sous forme de chiffres
         indexes = []
@@ -180,15 +187,16 @@ CSV '{}'".format(csv_file))
 
 
 def unicode_csv_reader(unicode_csv_data, dialect=csv.excel, **kwargs):
-    """ Lit un fichier CSV en UTF-8
+    """Lit un fichier CSV en UTF-8.
 
-        Args:
-            unicode_csv_data (file): descripteur de fichier à lire.
-            dialect (classjob): type de fichier CSV (je suppose).
+    Args:
+        unicode_csv_data (file): descripteur de fichier à lire.
+        dialect (classjob): type de fichier CSV (je suppose).
 
-        Returns:
-            (iterator): lignes du fichier CSV décodées depuis UTF-8 vers
-                unicode.
+    Returns:
+        :obj:`iterator`: lignes du fichier CSV décodées depuis UTF-8 vers
+        unicode.
+
     """
     # csv.py doesn't do Unicode; encode temporarily as UTF-8:
     csv_reader = csv.reader(utf_8_encoder(unicode_csv_data),
@@ -200,29 +208,30 @@ def unicode_csv_reader(unicode_csv_data, dialect=csv.excel, **kwargs):
 
 
 def utf_8_encoder(unicode_csv_data):
-    """ Renvoit les lignes d'un descripteur de fichier en UTF-8
+    """Renvoit les lignes d'un descripteur de fichier en UTF-8.
 
-        Args:
-            unicode_csv_data (file): descripteur du fichier à lire.
+    Args:
+        unicode_csv_data (file): descripteur du fichier à lire.
 
-        Returns:
-            (iterator): lignes du fichier encodées en UTF-8.
+    Returns:
+        :obj:`iterator`: lignes du fichier encodées en UTF-8.
+
     """
     for line in unicode_csv_data:
         yield line.encode(b'utf-8')
 
 
 def col2num(col):
-    """ Convertit un index de colonne en lettres en index numérique
+    """Convertit un index de colonne en lettres en index numérique.
 
-        Depuis http://stackoverflow.com/a/12640614
+    Depuis http://stackoverflow.com/a/12640614 .
 
-        Args:
-            col (unicode): index de colonne sous forme de lettres (A, B,... AA,
-                AB).
+    Args:
+        col (unicode): index de colonne sous forme de lettres (A, B,... AA, AB).
 
-        Returns:
-            (int): index de colonne sous forme de chiffre, commence à 0.
+    Returns:
+        int: index de colonne sous forme de chiffre, commence à 0.
+
     """
     num = 0
     for c in col:

@@ -1,11 +1,4 @@
 #-*- coding: utf8 -*-
-
-
-##
-# imports
-#
-
-
 from __future__ import unicode_literals
 import logging
 import os
@@ -14,15 +7,28 @@ from ..views.jdd import JddView
 
 
 class BasicController(object):
+    """Contrôleur générique utilisé comme base pour les autres contrôleurs du
+    projet.
+
+    Ce contrôleur n'a pas pour but d'être instancié. La méthode `write`
+    permet d'écrire des données sur le disque. Typiquement, il s'agit des
+    données générées par la méthode `retrieve` définie dans les classes
+    filles.
+
+    Attributes:
+        logger (:obj:`logging.Logger`): logger pour toute la classe.
+
+    """
     logger = logging.getLogger('controllers.jdd.BasicController')
 
     def write(self, text, directory):
-        """ Écrit une liste de données formatées dans un fichier texte
+        """Écrit une liste de données formatées dans un fichier texte.
 
-            Args:
-                text (:obj:`dict`): dictionnaire contenant le non de
-                    fichier et le contenu texte.
-                directory (unicode): dossier où enregistrer les fichiers.
+        Args:
+            text (:obj:`dict`): dictionnaire contenant le non de
+                fichier et le contenu texte.
+            directory (unicode): dossier où enregistrer les fichiers.
+
         """
         if isinstance(text, list):
             # écrire les fichiers
@@ -47,12 +53,13 @@ class BasicController(object):
                 ))
 
     def _write_texts(self, texts, directory):
-        """ Écrit une liste de données formatées dans un fichier texte
+        """Écrit une liste de données formatées dans un fichier texte.
 
-            Args:
-                texts (:obj:`list` of :obj:`dict`): liste de dictionnaires
-                    contenant le non de fichier et le contenu texte.
-                directory (unicode): dossier où enregistrer les fichiers.
+        Args:
+            texts (:obj:`list` of :obj:`dict`): liste de dictionnaires
+                contenant le non de fichier et le contenu texte.
+            directory (unicode): dossier où enregistrer les fichiers.
+
         """
         # écrire les fichiers
         for text in texts:
@@ -60,23 +67,25 @@ class BasicController(object):
 
 
 class JddController(BasicController):
-    """ Contrôleur pour la génération du fichier principal
+    """Contrôleur pour la génération du fichier principal.
 
-        Le contrôleur donne accès aux méthodes pour la génération du fichier
-        principal. La méthode `retrieve` crée le fichier principal dans le
-        dossier de sortie.
+    Le contrôleur donne accès aux méthodes pour la génération du fichier
+    principal. La méthode `retrieve` crée le fichier principal dans le
+    dossier de sortie.
 
-        Attributes:
-            logger (:obj:`logging.Logger`): logger pour toute la classe.
+    Attributes:
+        logger (:obj:`logging.Logger`): logger pour toute la classe.
+
     """
     logger = logging.getLogger('controllers.jdd.JddController')
 
     def retrieve(self, directory):
-        """ Donne une représentation des sessions en passant par la vue
+        """Donne une représentation des sessions en passant par la vue.
 
-            Args:
-                directory (unicode): dossier de sortie où enregistrer les
-                    fichiers.
+        Args:
+            directory (unicode): dossier de sortie où enregistrer les
+                fichiers.
+
         """
         # créer une vue et récupérer le document
         view = JddView()

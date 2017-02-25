@@ -13,27 +13,27 @@ PLANNING_PATTERN = 'planning.tex.sample'
 
 
 class PlanningView(BasicView):
-    """ Vue pour la génération d'un fichier LaTeX contenant le planning
+    """Vue pour la génération d'un fichier LaTeX contenant le planning.
 
-        La vue récupère les données stockées par les modèles et mises en ordre
-        par le contrôleur. Elle utilise Jinja2 pour le moteur de template.
+    La vue récupère les données stockées par les modèles et mises en ordre par
+    le contrôleur. Elle utilise Jinja2 pour le moteur de template.
 
-        Le planning se divise en un fichier principal `PLANNING` et une série de
-        fichiers pour chaque session `SESSION`. Ceci évite d'avoir un seul
-        fichier de planning qui serait très gros et pas pratique pour les
-        modifications à la dernière minute. Néanmoins, utiliser cette structure
-        complexifie pas mal le code, parce qu'il faut générer plusieurs fichiers.
+    Le planning se divise en un fichier principal `PLANNING` et une série de
+    fichiers pour chaque session `SESSION`. Ceci évite d'avoir un seul fichier
+    de planning qui serait très gros et pas pratique pour les modifications à la
+    dernière minute. Néanmoins, utiliser cette structure complexifie pas mal le
+    code, parce qu'il faut générer plusieurs fichiers.
 
-        Attributes:
-            logger (:obj:`logging.Logger`): logger pour toute la classe.
-            environment (:obj:`jinja2.environment.Environment`): enviornnement
-                de templates pour Jinja2. Il a été adapté pour que la syntaxe
-                coïncide avec LaTeX. Les accolades LaTeX faisaient interférence
-                avec les accolades du langage de template par défaut.
-            session_template_loaded (bool): flag pour indiquer si le template de
-                session a été chargé par Jinja2.
-            planning_template_loaded (bool): flag pour indiquer si le template de
-                planning a été chargé par Jinja2.
+    Attributes:
+        logger (:obj:`logging.Logger`): logger pour toute la classe.
+        environment (:obj:`jinja2.environment.Environment`): enviornnement de
+            templates pour Jinja2. Il a été adapté pour que la syntaxe coïncide
+            avec LaTeX. Les accolades LaTeX faisaient interférence avec les
+            accolades du langage de template par défaut.
+        session_template_loaded (bool): flag pour indiquer si le template de
+            session a été chargé par Jinja2.
+        planning_template_loaded (bool): flag pour indiquer si le template de
+            planning a été chargé par Jinja2.
     """
     logger = logging.getLogger('views.sessions.SessionsView')
 
@@ -42,15 +42,15 @@ class PlanningView(BasicView):
         self.planning_template_loaded = False
 
     def retrieve(self, events):
-        """ Formate les évents du planning dans le template
+        """Formate les évents du planning dans le template.
 
-            Args:
-                events_dict (:obj:`list` of :obj:`dict`): liste des évents sous
-                    forme de dictionnaire.
+        Args:
+            events_dict (:obj:`list` of :obj:`dict`): liste des évents sous
+                forme de dictionnaire.
 
-            Returns:
-                :obj:`dict`: dictionnaire du nom de fichier et du texte
-                du planning.
+        Returns:
+            :obj:`dict`: dictionnaire du nom de fichier et du texte du planning.
+
         """
         # la liste des fichiers à écrire, c'est-à-dire le fichier de planning et
         # les fichiers de session
@@ -83,14 +83,14 @@ class PlanningView(BasicView):
         return files_content
 
     def _retrieve_session(self, session_dict):
-        """ Formate une sessions dans le template
+        """Formate une sessions dans le template.
 
-            Args:
-                session_dict (:obj:`dict`): session sous forme de dictionnaire.
+        Args:
+            session_dict (:obj:`dict`): session sous forme de dictionnaire.
 
-            Returns:
-                :obj:`dict`: dictionnaire contenant le nom de fichier à créer et
-                le contenu texte.
+        Returns:
+            :obj:`dict`: dictionnaire contenant le nom de fichier à créer et le
+            contenu texte.
         """
         # charger le template
         if not self.session_template_loaded:
@@ -117,15 +117,15 @@ class PlanningView(BasicView):
             }
 
     def _retrieve_planning(self, events_dict):
-        """ Formate les évents du planning dans le template
+        """Formate les évents du planning dans le template.
 
-            Args:
-                events_dict (:obj:`list` of :obj:`dict`): liste des évents sous
-                    forme de dictionnaire.
+        Args:
+            events_dict (:obj:`list` of :obj:`dict`): liste des évents sous
+                forme de dictionnaire.
 
-            Returns:
-                :obj:`dict`: dictionnaire du nom de fichier et du texte
-                du planning.
+        Returns:
+            :obj:`dict`: dictionnaire du nom de fichier et du texte du planning.
+
         """
         # charger le template
         if not self.planning_template_loaded:

@@ -1,4 +1,11 @@
 #-*- coding: utf8 -*-
+"""Outils
+
+Module regroupant les diverses fonctions utiles au projet. Ces outils sont
+utilisés dans plusieurs fichiers et ont été regroupés ici pour faciliter leur
+accès.
+
+"""
 
 
 from __future__ import unicode_literals
@@ -11,27 +18,30 @@ locale.setlocale(locale.LC_ALL, ('fr_FR', 'utf8'))
 
 
 def read_tuple(string, kind=float):
-    """ Parse un string contenant une série de valeurs séparées par des
-        virgules en tuple
+    """Convertir un string en tuple.
 
-        Args:
-            string (unicode): string des valeurs.
-            kind (:obj:`type`): type de valeur attendue.
+    Parse un string contenant une série de valeurs séparées par des virgules en
+    tuple. Le type de données du tuple dépent du paramètre `kind`.
 
-        Return:
-            (:obj:`generator`): tuple des valeurs parsées
+    Args:
+        string (unicode): string des valeurs.
+        kind (:obj:`type`): type de valeur attendue.
+
+    Return:
+        :obj:`generator`: tuple des valeurs parsées
+
     """
     return (kind(v) for v in string.split(','))
 
 
 def todict(obj):
-    """ Transforme un objet en dictionnaire de façon récursive
+    """Transforme un objet en dictionnaire de façon récursive.
 
-        Args:
-            obj (:obj:): objet à convertir.
+    Args:
+        obj (:obj:): objet à convertir.
 
-        Returns:
-            (:obj:`dict`): objet sous forme de dictionnaire.
+    Returns:
+        :obj:`dict`: objet sous forme de dictionnaire.
     """
     data = {}
     if isinstance(obj, (datetime, Color)):
@@ -48,37 +58,42 @@ def todict(obj):
 
 
 def format_time(value):
-    """ Formate un objet `datetime` en texte ne contenant que le temps
+    """Formate un objet `datetime` en texte ne contenant que le temps.
 
-        Args:
-            value (:obj:`datetime`): date source.
+    Le temps est affiché selon le format "HH:MM".
 
-        Returns:
-            (unicode): temps formaté.
+    Args:
+        value (:obj:`datetime`): date source.
+
+    Returns:
+        unicode: temps formaté.
+
     """
     return value.strftime('%H:%M')
 
 
 def format_date(value):
-    """ Formate un objet `datetime` en texte ne contenant que la date
+    """Formate un objet `datetime` en texte ne contenant que la date.
 
-        Args:
-            value (:obj:`datetime`): date source.
+    La date est affichée selon le format "Jour JJ Mois".
 
-        Returns:
-            (unicode): date formatée.
+    Args:
+        value (:obj:`datetime`): date source.
+
+    Returns:
+        unicode: date formatée.
+
     """
     return value.strftime('%A %d %B')
 
 
 def format_color(value):
-    """ Formate un objet `Color` en représentation RVB décimale
+    """Formate un objet `Color` en représentation RVB décimale.
 
-        Args:
-            value (:obj:`Color`): couleur source.
+    Args:
+        value (:obj:`Color`): couleur source.
 
-        Returns:
-            (unicode): couleur RVB décimale, chaque canal séparé par une
-            virgule.
+    Returns:
+        unicode: couleur RVB décimale, chaque canal séparé par une virgule.
     """
     return ','.join(str(c) for c in value.rgb)
