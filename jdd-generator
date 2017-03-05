@@ -1,5 +1,21 @@
 #!/usr/bin/env python2.7
 #-*- coding: utf8 -*-
+"""Utilisation de JDD Generator par la ligne de commande.
+
+Ceci est le fichier d'utilisation du projet par la ligne de commande. C'est
+probablement l'utilisation la plus naturelle et la plus interactive.
+
+Il suffit d'invoquer le script :
+
+```
+./jdd-generator -h
+```
+
+Ce qui affichera l'aide du script. Le script doit avoir le droit d'exécution
+actif.
+
+"""
+
 from __future__ import unicode_literals
 from __future__ import absolute_import
 import logging
