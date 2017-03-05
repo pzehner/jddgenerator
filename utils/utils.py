@@ -97,3 +97,18 @@ def format_color(value):
         unicode: couleur RVB décimale, chaque canal séparé par une virgule.
     """
     return ','.join(str(c) for c in value.rgb)
+
+def format_printable(value):
+    """Ne garde que les caractères imprimables d'une chaîne
+
+    Procède en supprimant les caractères ayant un code inférieur à 31 qui
+    correspondent à des caractères de contrôles invisibles.
+
+    Args:
+        value (unicode): chaîne source.
+
+    Returns:
+        unicode: chaîne nettoyée des caractères invisibles.
+    """
+    control_map = dict.fromkeys(range(32))
+    return value.translate(control_map)

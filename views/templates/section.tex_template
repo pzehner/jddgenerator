@@ -1,0 +1,96 @@
+\block{ for abstract in abstracts }
+\begin{jddabstract}{%
+  \var{ abstract.phd.student.name }%
+}{%
+  \var{ abstract.phd.student.department }%
+  \block{ if abstract.phd.student.unit }
+  /\var{ abstract.phd.student.unit }%
+  \block{ endif }
+}{%
+  \var{ abstract.phd.student.grade }%
+}{%
+  \var{ abstract.color|color }
+}
+  \jddabstractinfo[%
+    picture=\var{ directory_pictures }/\var{ abstract.phd.student.picture },
+    email=\var{ abstract.phd.student.email },
+    location=\var{ abstract.phd.student.location },
+    \block{ with supervizors=abstract.phd.supervizors|selectattr('origin', 'equalto', 'Onera')|list }
+    \block{ if supervizors }
+    supervizorsin={%
+    \block{ for supervizor in supervizors }
+    \block{ if supervizor.title }
+    \var{ supervizor.title }~%
+    \block{ endif }
+    \var{ supervizor.name }%
+    ~(\var{ supervizor.department }%
+    \block{ if supervizor.unit }
+    /\var{ supervizor.unit }%
+    \block{ endif }
+    )%
+    \block{ if not loop.last }
+    \par
+    \block{ endif }
+    \block{ endfor }
+    },
+    \block{ if supervizors|length > 1 }
+    supervizorsinplur=s,
+    \block{ endif }
+    \block{ endif }
+    \block{ endwith }
+    \block{ with supervizors=abstract.phd.supervizors|rejectattr('origin', 'equalto', 'Onera')|list }
+    \block{ if supervizors }
+    supervizorsout={%
+    \block{ for supervizor in supervizors }
+    \block{ if supervizor.title }
+    \var{ supervizor.title }~%
+    \block{ endif }
+    \var{ supervizor.name }%
+    ~(\var{ supervizor.origin })%
+    \block{ if not loop.last }
+    \par
+    \block{ endif }
+    \block{ endfor }
+    },
+    \block{ if supervizors|length > 1 }
+    supervizorsoutplur=s,
+    \block{ endif }
+    \block{ endif }
+    \block{ endwith }
+    \block{ with directors=abstract.phd.directors }
+    \block{ if directors }
+    directors={%
+    \block{ for director in directors }
+    \block{ if director.title }
+    \var{ director.title }~%
+    \block{ endif }
+    \var{ director.name }%
+    ~(\var{ director.origin })%
+    \block{ if not loop.last }
+    \par
+    \block{ endif }
+    \block{ endfor }
+    },
+    \block{ if directors|length > 1 }
+    directorsplur=s,
+    \block{ endif }
+    \block{ endif }
+    \block{ endwith }
+    funding=\var{ abstract.phd.funding },
+  ]
+
+  \jddabstractcontent[%
+    title=\var{ abstract.phd.title },
+    \block{ with keywords=abstract.keywords }
+    \block{ if keywords }
+    keywords={\var{ keywords|join(', ') }},
+    \block{ endif }
+    \block{ endwith }
+  ]{\var{ abstract.text|printable }}
+
+  \block{ if not loop.last }
+  \vspace{2em}
+  \block{ endif }
+\end{jddabstract}
+
+\block{ endfor }

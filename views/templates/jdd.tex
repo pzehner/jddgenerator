@@ -24,6 +24,7 @@
 \usepackage{import}
 \usepackage{setspace}
 \usepackage{afterpage}
+\usepackage{keyval}
 
 % créer une page complètement vide
 \newcommand\blankpage{%
@@ -110,6 +111,106 @@
   {\small #1 -- #2} & \textbf{#3}~--~\emph{#4} \par {\small #5~--~#6} & {\small #7} \\
 }
 
+% environnement pour les résumés
+\newenvironment{jddabstract}[4]{%
+  % #1 nom
+  % #2 département/unité
+  % #3 année de thèse
+  % #4 couleur
+  \begin{minipage}{\textwidth}
+
+  {%
+    \def\arraystretch{1.75}
+    \begin{tabularx}{\textwidth}{%
+    >{\columncolor[rgb]{#4}[\tabcolsep][0.5\tabcolsep]}X%
+    >{\columncolor[rgb]{#4}[0.5\tabcolsep][0.5\tabcolsep]}C{3cm}%
+    >{\columncolor[rgb]{#4}[0.5\tabcolsep][\tabcolsep]}C{1.5cm}%
+    }
+      \textbf{\large{#1}} & \textbf{#2} & \textbf{#3}
+    \end{tabularx}
+    \vspace*{-\baselineskip}
+  }
+}{%
+  \end{minipage}
+}
+
+% macro pour le tableau interne du résumé
+\makeatletter
+\define@key{jddabstractinfo}{picture}{\def\jdd@picture{#1}}
+\define@key{jddabstractinfo}{email}{\def\jdd@email{#1}}
+\define@key{jddabstractinfo}{location}{\def\jdd@location{#1}}
+\define@key{jddabstractinfo}{supervizorsin}{\def\jdd@supervizorsin{#1}}
+\define@key{jddabstractinfo}{supervizorsinplur}{\def\jdd@supervizorsinplur{#1}}
+\define@key{jddabstractinfo}{supervizorsout}{\def\jdd@supervizorsout{#1}}
+\define@key{jddabstractinfo}{supervizorsoutplur}{\def\jdd@supervizorsoutplur{#1}}
+\define@key{jddabstractinfo}{directors}{\def\jdd@directors{#1}}
+\define@key{jddabstractinfo}{directorsplur}{\def\jdd@directorsplur{#1}}
+\define@key{jddabstractinfo}{funding}{\def\jdd@funding{#1}}
+\setkeys{jddabstractinfo}{picture=,email=,location=,supervizorsin=,supervizorsinplur=,supervizorsout=,supervizorsoutplur=,directors=,directorsplur=,funding=}
+
+\newcommand{\jddabstractinfo}[1][]{%
+  \setkeys{jddabstractinfo}{#1}
+  \setlength\topsep{0pt}
+  \setlength\parskip{0pt}
+  \begin{center}
+    \begin{minipage}[t]{0.17\textwidth}
+      \vspace{2pt}
+      \clipgraphics{3cm}{\jdd@picture}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.81\textwidth}
+      \vspace{2pt}
+      \begin{tabularx}{\textwidth}{R{3.5cm}X}
+        \textbf{Courriel} & \href{mailto:\jdd@email}{\nolinkurl{\jdd@email}} \\
+        \midrule
+
+        \textbf{Site} & \jdd@location \\
+        \midrule
+
+        \ifthenelse{\equal{\jdd@supervizorsin}{}}{}{%
+          \textbf{Encadrant\jdd@supervizorsinplur{} Onera} & \jdd@supervizorsin \\
+          \midrule
+        }
+
+        \ifthenelse{\equal{\jdd@supervizorsout}{}}{}{%
+          \textbf{Encadrant\jdd@supervizorsoutplur{} extérieur\jdd@supervizorsoutplur} & \jdd@supervizorsout \\
+          \midrule
+        }
+
+        \ifthenelse{\equal{\jdd@directors}{}}{}{%
+          \textbf{Directeur\jdd@directorsplur{} de thèse} & \jdd@directors \\
+          \midrule
+        }
+
+        \textbf{Financement} & \jdd@funding \\
+        \bottomrule
+      \end{tabularx}
+    \end{minipage}
+  \end{center}
+}
+\makeatother
+
+% macro pour le contenu du résumé
+\makeatletter
+\define@key{jddabstractcontent}{title}{\def\jdd@title{#1}}
+\define@key{jddabstractcontent}{keywords}{\def\jdd@keywords{#1}}
+\setkeys{jddabstractcontent}{title=Sans titre,keywords=}
+\newcommand{\jddabstractcontent}[2][]{%
+  % #1 options
+  % #2 texte
+  \setkeys{jddabstractcontent}{#1}
+  \subsection*{\jdd@title}
+
+  \ifthenelse{\equal{\jdd@keywords}{}}{}{%
+    \noindent{\small\emph{\jdd@keywords}}
+
+    \vspace{4pt}
+  }
+
+  \noindent{#2}
+}
+\makeatother
+
 \begin{document}
 
 \def\tabularxcolumn#1{m{#1}}
@@ -161,7 +262,18 @@
 
 \setstretch{0.95}
 
-% \subimport{../abstracts_booklets/}{abstracts_booklets_content}
+% on importe le fichier utilisateur s'il existe, sinon, on utilise le fichier
+% généré
+% si aucun des deux n'existe, on n'importe rien
+\IfFileExists{./booklet/booklet.tex}{%
+  \subimport{booklet/}{booklet.tex}
+}{%
+  \IfFileExists{./booklet/booklet.tex.sample}{%
+    \subimport{booklet/}{booklet.tex.sample}
+  }{%
+    \message{Pas de fichiers de recueil de résumés courts}
+  }
+}
 
 
 \end{document}

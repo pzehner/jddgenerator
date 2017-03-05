@@ -173,104 +173,33 @@ class PlanningController(BasicController):
                 liste CSV des doctorants, qui doit contenir les sujets, les
                 doctorants et les encadrants.
         """
-        # lire le fichier CSV
-        students = CSVDict()
-        students.read(students_file)
-
-        # créer les objets
+        # initialiser les présentations
         self.presentations = []
 
-        # lire chaque ligne
-        # On lit les lignes du fichier qui liste les doctorants avec leur sujet
-        # et leur encadrants/directeurs. On considère que chaque ligne donne
-        # une présentation.
-        for line in students:
-            # On ajoute une nouvelle présentation que si elle sera présentée.
-            if config.getboolean('booleans', line['come'].lower()):
-                # présentation
-                presentation = Presentation(
-                        code=line['code'],
-                        )
+        # obtenir la liste des thèses depuis le fichier de listing des
+        # doctorants
+        phds = self.get_phds(students_file)
 
-                # doctorant
-                student = Student(
-                        name=(
-                            line['first-name'] + ' ' + line['name']
-                            ).title(),
+        # on crée les présentations depuis la liste des thèses
+        for code, come_flag, phd in phds:
+            # si le doctorant n'assiste pas aux JDD, on ne l'ajoute pas au
+            # planning
+            if not come_flag:
+                continue
 
-                        grade=line['grade'],
-                        department=line['department'],
-                        unit=line['unit'],
-                        location=line['location'],
-                        )
+            # créer la présentation depuis le code et attacher la thèse
+            presentation = Presentation(
+                    code=code
+                    )
 
-                # encadrants
-                # On charge tous les encadrants possibles comme on ne connait
-                # pas leur nombre, on utilise une boucle infinie.
-                # Ceci marche car les champs concernant les encadrants dans le
-                # fichier de configuration sont préfixés du numéro d'encadrant :
-                # `s1-name` avec `s` pour "supervizor".
-                supervizors = []
-                i = 0
-                while True:
-                    # On vérifie que le nom de l'encadrant suivant existe et
-                    # n'est pas vide.
-                    # TODO commencer à 0
-                    i += 1
-                    if "s{}-name".format(i) not in line or \
-                            not line["s{}-name".format(i)]:
-                                break
+            presentation.set_phd(phd)
 
-                    # dans ce cas ajouter l'encadrant
-                    prefix = 's{}-'.format(i)
-                    supervizors.append(Supervizor(
-                        title=line[prefix + 'title'],
-                        name=line[prefix + 'name'].title(),
-                        origin=line[prefix + 'origin'],
-                        department=line[prefix + 'department'],
-                        unit=line[prefix + 'unit']
-                        ))
-
-                # directeurs
-                # Même logique que pour les encadrants.  Sauf que les champs
-                # concernant les directeurs sont préfixés par `d`, pour
-                # "director": `d1-name`.
-                directors = []
-                i = 0
-                while True:
-                    # On vérifie que le nom du directeur suivant existe et n'est
-                    # pas vide.
-                    i += 1
-                    if "d{}-name".format(i) not in line or \
-                            not line["d{}-name".format(i)]:
-                                break
-
-                    # dans ce cas ajouter le directeur
-                    prefix = 'd{}-'.format(i)
-                    directors.append(Director(
-                        title=line[prefix + 'title'],
-                        name=line[prefix + 'name'].title(),
-                        origin=line[prefix + 'origin']
-                        ))
-
-                # thèse
-                phd = PhD(
-                        title=line['title'],
-                        funding=line['funding'],
-                        )
-
-                # faire les liens entre les objets
-                phd.set_student(student)
-                phd.add_supervizors(supervizors)
-                phd.add_directors(directors)
-                presentation.set_phd(phd)
-
-                # sauver
-                self.presentations.append(presentation)
-                self.logger.debug("Ajoute la présentation \
+            # sauver
+            self.presentations.append(presentation)
+            self.logger.debug("Ajoute la présentation \
 \"{presentation}\" au contrôleur".format(
-                    presentation=presentation
-                    ))
+                presentation=presentation
+                ))
 
     def _apply_repartitions(self, repartitions_file):
         """Extraire les données de repartitions.
@@ -286,7 +215,7 @@ class PlanningController(BasicController):
 
         # parcours de chaque timing
         # On lit les lignes du fichier des repartitions. Le fichier doit avoir une
-        # ligne par présentation on repère les présentations avec le code.
+        # ligne par présentation. On repère les présentations avec le code.
         for timing in repartitions:
             # on récupère la présentation correspondante avec le code
             code = timing['code']

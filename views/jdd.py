@@ -76,9 +76,11 @@ class BasicView(object):
             line_statement_prefix=r'%%',
             line_comment_prefix=r'%#',
             trim_blocks=True,
+            lstrip_blocks=True,
             autoescape=False,
             )
 
     environment.filters['time'] = utils.format_time
     environment.filters['date'] = utils.format_date
     environment.filters['color'] = utils.format_color
+    environment.filters['printable'] = utils.format_printable

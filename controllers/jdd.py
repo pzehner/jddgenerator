@@ -4,6 +4,9 @@ import logging
 import os
 from codecs import open
 from ..views.jdd import JddView
+from ..utils.csv_dict import CSVDict
+from ..config import config
+from ..models.jdd import Student, PhD, Supervizor, Director
 
 
 class BasicController(object):
@@ -20,6 +23,133 @@ class BasicController(object):
 
     """
     logger = logging.getLogger('controllers.jdd.BasicController')
+
+    def get_phds(self, students_file):
+        """Récupère les thèses depuis la liste des doctorants.
+
+        Cette méthode est utilisée pour la génération du listing et du recueil
+        des résumés courts, elle a donc été mutualisée dans la plus proche
+        classe parente de `PlanningController` et de `BookletController`.
+
+        Args:
+            students_file (unicode): fichier de configuration pour charger la
+                liste CSV des doctorants, qui doit contenir les sujets, les
+                doctorants et les encadrants.
+
+        Returns:
+            :obj:`list` of tuple: {
+                unicode: code du doctorant, son identifiant unique utilisé à
+                    d'autres endroits.
+                bool: `True` si le doctorant est présent aux JDD, `False`
+                    suivant.
+                :obj:`PhD`: thèse, contenant le doctorant, le sujet, les
+                    encadrants et les directeurs.
+            }
+
+        """
+        # lire le fichier CSV
+        students = CSVDict()
+        students.read(students_file)
+
+        # créer les objets
+        phds = []
+
+        # lire chaque ligne
+        # On lit les lignes du fichier qui liste les doctorants avec leur sujet
+        # et leur encadrants/directeurs. On considère que chaque ligne donne
+        # une présentation.
+        for line in students:
+            # flag pour indiquer si la thèse sera présentée
+            come_flag = config.getboolean('booleans', line['come'].lower())
+
+            # code
+            code = line['code']
+
+            # doctorant
+            student = Student(
+                    name=(
+                        line['first-name'] + ' ' + line['name']
+                        ).title(),
+
+                    grade=line['grade'],
+                    department=line['department'],
+                    unit=line['unit'],
+                    location=line['location'],
+                    picture=code,
+                    email=line['email']
+                    )
+
+            # encadrants
+            # On charge tous les encadrants possibles. Comme on ne connait pas
+            # leur nombre, on utilise une boucle infinie. Ceci marche car les
+            # champs concernant les encadrants dans le fichier de configuration
+            # sont préfixés du numéro d'encadrant : `s1-name` avec `s` pour
+            # "supervizor".
+            supervizors = []
+            i = 0
+            while True:
+                # On vérifie que le nom de l'encadrant suivant existe et
+                # n'est pas vide.
+                # TODO commencer à 0
+                i += 1
+                if "s{}-name".format(i) not in line or \
+                        not line["s{}-name".format(i)]:
+                            break
+
+                # dans ce cas ajouter l'encadrant
+                prefix = 's{}-'.format(i)
+                supervizors.append(Supervizor(
+                    title=line[prefix + 'title'],
+                    name=line[prefix + 'name'].title(),
+                    origin=line[prefix + 'origin'],
+                    department=line[prefix + 'department'],
+                    unit=line[prefix + 'unit']
+                    ))
+
+            # directeurs
+            # Même logique que pour les encadrants.  Sauf que les champs
+            # concernant les directeurs sont préfixés par `d`, pour "director" :
+            # `d1-name`.
+            directors = []
+            i = 0
+            while True:
+                # On vérifie que le nom du directeur suivant existe et n'est
+                # pas vide.
+                i += 1
+                if "d{}-name".format(i) not in line or \
+                        not line["d{}-name".format(i)]:
+                            break
+
+                # dans ce cas ajouter le directeur
+                prefix = 'd{}-'.format(i)
+                directors.append(Director(
+                    title=line[prefix + 'title'],
+                    name=line[prefix + 'name'].title(),
+                    origin=line[prefix + 'origin']
+                    ))
+
+            # thèse
+            phd = PhD(
+                    title=line['title'],
+                    funding=line['funding'],
+                    )
+
+            # logger la ligne
+            self.logger.debug("Extrait la ligne \"{code}\": \"{phd}\"{come}".format(
+                code=code,
+                phd=phd,
+                come="" if come_flag else " (absent)"
+                ))
+
+            # faire les liens entre les objets
+            phd.set_student(student)
+            phd.add_supervizors(supervizors)
+            phd.add_directors(directors)
+
+            # ajouter la thèse ainsi que son code et son flag de présentation
+            phds.append((code, come_flag, phd))
+
+        return phds
 
     def write(self, text, directory):
         """Écrit une liste de données formatées dans un fichier texte.

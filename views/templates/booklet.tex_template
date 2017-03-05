@@ -1,0 +1,7 @@
+\block{ for section in sections }
+\subsection*{Session \var{ section.number }}
+
+\input{\var{ section.file_name }}
+\newpage
+
+\block{ endfor }
