@@ -1,12 +1,13 @@
 #-*- coding: utf8 -*-
 from __future__ import unicode_literals
+from __future__ import absolute_import
 import os
 import logging
 from datetime import timedelta, datetime
 from codecs import open
 from ConfigParser import SafeConfigParser
 from colour import Color
-from jdd import BasicController
+from .jdd import BasicController
 from ..utils import utils
 from ..utils.csv_dict import CSVDict
 from ..models.planning import Event, Session, Presentation

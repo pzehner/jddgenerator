@@ -1,0 +1,210 @@
+#!/usr/bin/env python2.7
+#-*- coding: utf8 -*-
+from __future__ import unicode_literals
+from __future__ import absolute_import
+import logging
+from argparse import ArgumentParser
+from jdd_generator.controllers.planning import PlanningController
+from jdd_generator.controllers.booklet import BookletController
+from jdd_generator.controllers.jdd import JddController
+
+
+OUTPUT_DIRECTORY = 'jdd'
+STUDENTS_FILE = 'listing.ini'
+REPARTITIONS_FILE = 'timings.ini'
+PLANNING_FILE = 'planning.ini'
+BOOKLET_FILE = 'booklet.ini'
+ABSTRACT_FILES = 'abstracts.ini'
+PICTURES_DIRECTORY = 'photos'
+
+
+def get_arg_parser():
+    """Créer le parseur des arguments d'entrée.
+
+    Returns:
+        :obj:`argparse.ArgumentParser`: parseur pour les arguments d'entrée.
+
+    """
+    # parseur général
+    parser = ArgumentParser(
+            description="Générateur de fichiers LaTeX pour le planning et le recueil \
+des résumés courts des JDD."
+            )
+
+    parser.add_argument(
+            '-d',
+            '--debug',
+            action='store_true',
+            help="Mode débug. Accroit la verbosité."
+            )
+
+    parser.add_argument(
+            '-o',
+            '--output-directory',
+            default=OUTPUT_DIRECTORY,
+            help="Dossier où générer les fichiers. Par défaut \"{}\".".format(
+                OUTPUT_DIRECTORY
+                )
+            )
+
+    subparsers = parser.add_subparsers()
+
+    # parseur pour le planning
+    planning_parser = subparsers.add_parser(
+            'planning',
+            help="Génère le planning.",
+            description="Générateur de fichiers LaTeX pour le planning des JDD."
+            )
+
+    planning_parser.add_argument(
+            '-s',
+            '--students-file',
+            default=STUDENTS_FILE,
+            help="Chemin du fichier INI pour le listing des doctorants. Par \
+défaut : \"{}\".".format(STUDENTS_FILE)
+            )
+
+    planning_parser.add_argument(
+            '-r',
+            '--repartitions-file',
+            default=REPARTITIONS_FILE,
+            help="Chemin du fichier INI pour le listing des répartition des \
+présentations. Par défaut \"{}\".".format(REPARTITIONS_FILE)
+            )
+
+    planning_parser.add_argument(
+            '-p',
+            '--planning-file',
+            default=PLANNING_FILE,
+            help="Chemin du fichier INI pour le listing du planning. Par défaut \
+\"{}\".".format(PLANNING_FILE)
+            )
+
+    planning_parser.set_defaults(func=make_planning)
+
+    # parseur pour le recueil
+    booklet_parser = subparsers.add_parser(
+            'booklet',
+            help="Génère le recueil des résumés courts.",
+            description="Générateur de fichiers LaTeX pour le recueil des résumés \
+courts des JDD."
+            )
+
+    booklet_parser.add_argument(
+            '-b',
+            '--booklet-file',
+            default=BOOKLET_FILE,
+            help="Chemin du fichier INI pour le listing du recueil."
+            )
+
+    booklet_parser.add_argument(
+            '-a',
+            '--abstracts-file',
+            default=ABSTRACT_FILES,
+            help="Chemin du fichier INI pour le listing des résumés courts."
+            )
+
+    booklet_parser.add_argument(
+            '-s',
+            '--students-file',
+            default=STUDENTS_FILE,
+            help="Chemin du fichier INI pour le listing des doctorants. Par \
+défaut : \"{}\".".format(STUDENTS_FILE)
+            )
+
+    booklet_parser.add_argument(
+            '-r',
+            '--repartitions-file',
+            default=REPARTITIONS_FILE,
+            help="Chemin du fichier INI pour le listing des répartition des \
+résumés. Par défaut \"{}\".".format(REPARTITIONS_FILE)
+            )
+
+    booklet_parser.add_argument(
+            '-p',
+            '--pictures-directory',
+            default=PICTURES_DIRECTORY,
+            help="Chemin du dossier de photos. Peut être relatif ou absolu. Par \
+défaut \"{}\".".format(PICTURES_DIRECTORY)
+            )
+
+    booklet_parser.set_defaults(func=make_booklet)
+
+    return parser
+
+
+def make_planning(args):
+    """Crée le fichier de planning.
+
+    Args:
+        args (:obj:`argparse.Namespace`): arguments d'entrée parsés.
+
+    """
+    planning = PlanningController()
+    planning.create(
+            students_file=args.students_file,
+            repartitions_file=args.repartitions_file,
+            planning_file=args.planning_file
+            )
+
+    planning.retrieve(directory=args.output_directory)
+
+    make_main(args)
+
+
+def make_booklet(args):
+    """Crée le fichier de recueil
+
+    Args:
+        args (:obj:`argparse.Namespace`): arguments d'entrée parsés.
+
+    """
+    booklet = BookletController()
+    booklet.create(
+            students_file=args.students_file,
+            repartitions_file=args.repartitions_file,
+            booklet_file=args.booklet_file,
+            abstracts_file=args.abstracts_file,
+            directory_pictures=args.pictures_directory
+            )
+
+    booklet.retrieve(directory=args.output_directory)
+
+    make_main(args)
+
+
+def make_main(args):
+    """Crée le fichier principal.
+
+    Args:
+        args (:obj:`argparse.Namespace`): arguments d'entrée parsés.
+
+    """
+    jdd = JddController()
+    jdd.retrieve(directory=args.output_directory)
+
+
+def set_logging(args):
+    """Met en place le niveau de logging
+
+    Args:
+        args (:obj:`argparse.Namespace`): arguments d'entrée parsés.
+
+    """
+    if args.debug:
+        logging.basicConfig(level=logging.DEBUG)
+
+    else:
+        logging.basicConfig(level=logging.INFO)
+
+
+if __name__ == '__main__':
+    # créer le parseur et obtenir les arguments d'entrée
+    parser = get_arg_parser()
+    args = parser.parse_args()
+
+    # mettre en place le logging
+    set_logging(args)
+
+    # générer les fichiers
+    args.func(args)
