@@ -45,11 +45,11 @@ class PlanningView(BasicView):
         """Formate les évents du planning dans le template.
 
         Args:
-            events_dict (:obj:`list` of :obj:`dict`): liste des évents sous
-                forme de dictionnaire.
+            events (:obj:`list` of :obj:`Event`): liste des évents.
 
         Returns:
-            :obj:`dict`: dictionnaire du nom de fichier et du texte du planning.
+            :obj:`list` of :obj:`dict`: liste de dictionnaires contenant le nom
+            des fichiers et leur contenu pour le planning.
 
         """
         # la liste des fichiers à écrire, c'est-à-dire le fichier de planning et
@@ -91,6 +91,7 @@ class PlanningView(BasicView):
         Returns:
             :obj:`dict`: dictionnaire contenant le nom de fichier à créer et le
             contenu texte.
+
         """
         # charger le template
         if not self.session_template_loaded:
@@ -117,14 +118,15 @@ class PlanningView(BasicView):
             }
 
     def _retrieve_planning(self, events_dict):
-        """Formate les évents du planning dans le template.
+        """Formate le fichier principal du planning.
 
         Args:
             events_dict (:obj:`list` of :obj:`dict`): liste des évents sous
                 forme de dictionnaire.
 
         Returns:
-            :obj:`dict`: dictionnaire du nom de fichier et du texte du planning.
+            :obj:`dict`: dictionnaire du nom de fichier et du texte du fichier
+            principal du planning.
 
         """
         # charger le template
@@ -141,8 +143,8 @@ class PlanningView(BasicView):
 
         # rendre le planning
         text = template.render({'events': events_dict})
-        self.logger.debug("Génére le texte pour le conteneur de sessions")
         file_name = PLANNING_PATTERN
+        self.logger.debug("Génére le texte pour le planning")
 
         return {
                 'file_name': file_name,

@@ -25,8 +25,9 @@ class PlanningController(BasicController):
 
     Le contrôleur donne accès aux méthodes pour la génération des fichiers de
     planning. La méthode `create` récupère les données des fichiers d'entrée,
-    puis les ordonne avec les classes des modèles. La méthode `retrieve` exporte
-    les données stockées par la vue.
+    puis les ordonne avec les classes des modèles. La méthode `retrieve` envoit
+    ces données à la vue pour les formatter en fichiers LaTeX. Le résultat est
+    ensuite écrit sur le disque.
 
     Attributes:
         logger (:obj:`logging.Logger`): logger pour toute la classe.
@@ -46,7 +47,7 @@ class PlanningController(BasicController):
         """Crée la structure de donnée depuis les différents fichiers d'entrée.
 
         Args:
-            planning_file (unicode): fichies de configuration des événements qui
+            planning_file (unicode): fichier de configuration des événements qui
                 contient pour chaque évent leur jour, heure, chairman et couleur
                 d'affichage sur le programme.
             students_file (unicode): fichier de configuration pour charger le
@@ -71,6 +72,23 @@ class PlanningController(BasicController):
 
         # assigner les présentations dans l'ordre aux sessions
         self._sort_presentations()
+
+    def retrieve(self, directory):
+        """Donne une représentation du planning en passant par la vue.
+
+        Args:
+            directory (unicode): dossier de sortie où enregistrer les fichiers.
+
+        """
+        # on crée une vue et lui passe les données
+        view = PlanningView()
+        files_content = view.retrieve(self.events)
+
+        # dossier pour écrire les fichiers de planning
+        directory_planning = os.path.join(directory, 'planning')
+
+        # écrire
+        self.write(files_content, directory_planning)
 
     def _create_events(self, planning_file):
         """Extraire les données du planning.
@@ -225,7 +243,7 @@ class PlanningController(BasicController):
             # continuer.
             if presentation is None:
                 self.logger.warning("La ligne de répartiton des timings \
-\"{code}\" \ ne correspond à aucune présentation".format(
+\"{code}\" ne correspond à aucune présentation".format(
                     code=code
                     ))
 
@@ -252,9 +270,8 @@ n'est attribuée à aucun jour".format(
             self.logger.debug("Ajoute les infos de timing à la présentation \
 \"{presentation}\"".format(presentation=presentation))
 
-
     def _sort_events(self):
-        """Trier les évents
+        """Trier les évents.
 
         Les évents sont triés par date de début.
 
@@ -263,7 +280,7 @@ n'est attribuée à aucun jour".format(
         self.events.sort(key=lambda s: s.start)
 
     def _sort_presentations(self):
-        """Affecte les présentations aux sessions et les trie
+        """Affecte les présentations aux sessions et les trie.
 
         Au sein de chaque session, les présentations ston triées par leur numéro
         d'ordre, puis leur date de début et de fin leur sont uttribuées.
@@ -337,20 +354,3 @@ n'est attribuée à aucun jour".format(
                 return presentation
 
         return None
-
-    def retrieve(self, directory):
-        """Donne une représentation des sessions en passant par la vue.
-
-        Args:
-            directory (unicode): dossier de sortie où enregistrer les fichiers.
-
-        """
-        # on crée une vue et lui passe les données
-        view = PlanningView()
-        files_content = view.retrieve(self.events)
-
-        # dossier pour écrire les fichiers de planning
-        directory_planning = os.path.join(directory, 'planning')
-
-        # écrire
-        self.write(files_content, directory_planning)

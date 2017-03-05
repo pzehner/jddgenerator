@@ -120,7 +120,7 @@ class Session(Event):
 
     @property
     def presentations_amount(self):
-        """ int: nombre de présentations dans la session.
+        """int: nombre de présentations dans la session.
 
         """
         return len(self.presentations)
