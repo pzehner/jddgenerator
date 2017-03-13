@@ -120,7 +120,11 @@ section 'fields'")
             raise ValueError("Le fichier compagnon doit avoir une \
 clé 'file' dans la section 'info'")
 
-        file_name = config.get('info', 'file')
+        # on ajoute le chemin du dossien du fichier compagnon
+        file_name = os.path.join(
+                os.path.dirname(config_file),
+                config.get('info', 'file')
+                )
 
         # récupérer les champs
         fields = config.items('fields')

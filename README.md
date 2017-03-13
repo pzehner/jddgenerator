@@ -126,7 +126,7 @@ Le projet manipule chaque fichier `csv` avec un ficher de configuration (encore 
 ```dosini
 [info]
 # ici, on a des infos sur le fichier à ouvrir
-file = /chemin/vers/le/fichier/csv # le chemin est relatif au point d'appel du générateur
+file = /chemin/vers/le/fichier.csv # le chemin est relatif au dossier du fichier INI
 skip = 1 # nombre de lignes à sauter en début de fichier, par défaut 1
 separator = \t # séparateur de champ, par défaut la tabulation
 
