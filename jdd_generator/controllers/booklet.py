@@ -172,7 +172,10 @@ valide".format(directory_pictures))
             # Si le résumé n'a pas de contenu (le texte du résumé lui-même), on
             # logge et on continue.
             if not abstract['text']:
-                self.logger.warning("La ligne \"{}\" n'a pas de résumé")
+                self.logger.warning("La ligne \"{}\" n'a pas de résumé".format(
+                    code
+                    ))
+
                 continue
 
             # TODO nettoyer la ligne des caractères exotiques
