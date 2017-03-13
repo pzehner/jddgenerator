@@ -1,0 +1,379 @@
+#!/bin/bash
+
+_install () {
+        ##
+        # Programme principal pour instller JDD Generator
+        #
+
+        # variables
+        local debug=false
+        local quiet=false
+        local dry_run=false
+        local no_proxy=false
+        local systemwide=false
+        local path_warning=false
+        local install_target='--user'
+        local -r local_bin_directory="${HOME}/.local/bin"
+
+        # arguments optionnels
+        while getopts ":hqdDPs" option
+        do
+                case $option in
+                        s) # installer au niveau système
+                                systemwide=true
+                                install_target=''
+                                ;;
+                        P) # ne pas utiliser de proxy
+                                no_proxy=true
+                                ;;
+                        D) # mode dry run
+                                dry_run=true
+                                ;;
+                        h) # afficher l'aide
+                                _install_help
+                                return 0
+                                ;;
+                        q) # réduire la verbosité
+                                debug=false
+                                quiet=true
+                                ;;
+                        d) # mode debug
+                                debug=true
+                                quiet=false
+                                ;;
+                        *)
+                                _error "Argument incorrect"
+                                _install_help
+                                exit 2
+                esac
+        done
+
+        _info "Ce script va installer un environnement pour JDD Generator"
+
+        if $systemwide
+        then
+                _info "Les installations se feront au niveau système"
+        fi
+
+        # lancer les différentes opérations
+        _check_pip
+        _pip_install_dependencies
+
+        _info "Fin du script"
+}
+
+_install_help () {
+        ##
+        # Aide pour `install`
+        #
+        cat << EOF
+Syntaxe :
+$(basename "$0") [-s] [-P] [-D] [-d] [-q] [-h]
+
+Installe les dépendances pour JDD Generator.
+
+Les dépendances sont installées avec pip. Si pip n'est pas installé, le script
+l'installe automatiquement. Toutes les installations sont faites au niveau
+utilisateur par défaut. Si le script est lancé dans un virtualenv, il installera
+les dépendances dans le virtualenv.
+
+Arguments :
+    -s
+        Demande d'installer les dépendances au niveau système. Cela nécessite
+        d'avoir les droits root. Cela risque d'avoir des effets indésirables si
+        ce paramètre est appelé sans les droits roots. Ne l'appelez que si vous
+        savez ce que vous faites.
+    -P
+        N'utilise pas de proxy. Par défaut, si l'installeur ne détecte pas de
+        proxy dans les variables d'environnement, il met en place celui de
+        l'ONERA.
+    -D
+        Mode dry-run, exécute le script sans rien installer ou compiler.
+    -d
+        Mode débug, augmente la verbosité.
+    -q
+        Mode silencieux, réduit la verbosité.
+    -h
+        Affiche ce message d'aide et quitte.
+EOF
+}
+
+_check_proxy () {
+        ##
+        # Vérifie qu'un proxy est en place, sinon impose celui de l'ONERA
+        #
+
+        # si on a explicitement demandé de ne pas utiliser de proxy
+        if $no_proxy
+        then
+                _debug "Vérification du proxy désactivée"
+                return 0
+        else
+                _debug "Vérification du proxy"
+        fi
+
+        # variables
+        local -r proxy_onera="http://proxy.onera:80/"
+        declare -Ar proxies_list=( \
+                ["all_proxy"]="$all_proxy" \
+                ["ALL_PROXY"]="$ALL_PROXY" \
+                ["http_proxy"]="$http_proxy" \
+                ["HTTP_PROXY"]="$HTTP_PROXY" \
+                ["https_proxy"]="$https_proxy" \
+                ["HTTPS_PROXY"]="$HTTPS_PROXY" \
+                )
+
+        local proxy_found=false
+        local proxies_found_str=""
+        local proxy
+        local proxy_name
+
+        # gestion du proxy
+        # on vérifie s'il existe au moins une déclaration de proxy dans les
+        # variables d'environnement
+        for proxy_name in ${!proxies_list[@]}
+        do
+                proxy=${proxies_list["$proxy_name"]}
+                if [[ -n $proxy ]]
+                then
+                        proxy_found=true
+                        # on crée une chaîne de caractère pour dire quelles variables
+                        # d'environnement contiennent un proxy
+                        proxies_found_str="${proxies_found_str}
+${proxy_name} : '$proxy'"
+                fi
+        done
+
+        if $proxy_found
+        then
+                _debug "Au moins un proxy configuré : ${proxies_found_str}"
+        else
+                _debug "Pas de proxy trouvé, utilisation du proxy '${proxy_onera}'"
+                export all_proxy=$proxy_onera
+        fi
+}
+
+_check_pip () {
+        ##
+        # Vérifier que pip est installé, sinon l'installer
+        #
+        _info "Le programme d'installation vérifie si pip est installé pour les dépendances"
+
+        # variables
+        local -r pip_setup_url="https://bootstrap.pypa.io/get-pip.py"
+        local -r pip_setup_file="$(basename $pip_setup_url)"
+        local -r pip_setup_directory="/tmp"
+        local install_error
+
+        # vérifier si pip est installé
+        if command -v pip >/dev/null 2>&1
+        then
+                _info "pip est installé"
+                return 0
+        fi
+
+        # il faut installer pip
+        _info "pip n'est pas installé, son installeur va être récupéré depuis '${pip_setup_url}'"
+
+        # on catpure une interruption du programme pour garantir de supprimer le
+        # fichier téléchargé
+        trap _check_pip_exit SIGINT
+
+        # on vérifie le proxy
+        _check_proxy
+
+        # on récupère le bootstrap de pip
+        # les ordinateurs de l'ONERA ont une versio antidiluvienne de
+        # `easy_install` qui ne permet pas d'installer pour l'utilisateur
+        # seulement
+        wget \
+                --directory-prefix=${pip_setup_directory} \
+                --timestamping \
+                $pip_setup_url
+
+        # installation
+        _info "pip va être installé"
+        if ! $dry_run
+        then
+                python \
+                        ${pip_setup_directory}/${pip_setup_file} \
+                        $install_target
+
+                install_error=$?
+        else
+                _debug "Installation désactivée en mode dry-run"
+                install_error=0
+        fi
+
+        # on supprime le fichier téléchargé
+        _check_pip_clean
+
+        # on libère la capture
+        trap - SIGINT
+
+        # on vérifie que l'installation s'est bien passée
+        if [[ $install_error > 0 ]]
+        then
+                _error "pip n'a pas pu être installé, erreur ${install_error}"
+                exit 2
+        fi
+
+        _info "pip a été installé"
+
+        # si l'installation est au niveau système, on ne vérifie pas `PATH`
+        # en fait, même sans spécifier `--user`, l'installation peut se
+        # faire dans le dossier utilisateur, sans doute parce que `pip` voit
+        # qu'on n'a pas de droits root ?
+        # une note a été ajoutée au paramètre `-s` pour éviter qu'il soit
+        # utilisé sans savoir
+        if $systemwide
+        then
+                return 0
+        fi
+
+        # sinon, vérifier que le PATH
+        _check_path
+
+}
+
+_check_pip_exit () {
+        ##
+        # Sortir de `check_pip` après un arrêt utilisateur
+        #
+        _check_pip_clean
+        exit 130
+}
+
+_check_pip_clean () {
+        ##
+        # Supprimer le fichier téléchargé par `check_pip`
+        #
+        local -r file=${pip_setup_directory}/${pip_setup_file}
+        if [[ -f $file ]]
+        then
+                _debug "Suppression de '$file'"
+                rm -f $file
+        fi
+}
+
+_check_path () {
+        ##
+        # Vérifier que le dossier bin local fait partie du PATH
+        #
+
+        # on vérifie que `PATH` inclu le dossier `bin` local
+        if [[ $PATH == *${local_bin_directory}* ]]
+        then
+                return 0
+        fi
+
+        # si on a déjà affiché ce message, on le skippe
+
+        if ! $path_warning
+        then
+                # et si ce n'est pas le cas, on indique à l'utilisateur de le faire
+                _warning "Mettre à jour le PATH pour prendre en compte le
+dossier local qui contient les exécutables. Pour cela, ajouter dans le fichier
+de configuration du shell (par exemple dans '.bash_profile', '.bashrc' ou selon
+le shell) la ligne suivante :
+PATH=${local_bin_directory}:\$PATH"
+
+                # mettre à jour `PATH` tout de suite
+                export PATH=$PATH:${local_bin_directory}
+        fi
+
+        path_warning=true
+}
+
+_pip_install_dependencies () {
+        ##
+        # Installer les dépendances Python avec pip
+        #
+        _info "Le programme d'installation récupère les dépendances Python avec pip"
+
+        # variables
+        local -r requirements_file="requirements.txt"
+        local error_code
+
+        # on vérifie que le fichier des dépendances existe
+        if ! [[ -f $requirements_file ]]
+        then
+                _error "Le fichier des dépendances '${requirements_file}' n'a pas pu être trouvé"
+                exit 2
+        fi
+
+        # on vérifie le proxy
+        _check_proxy
+
+        # gérer le cas du virtual env
+        if [[ -n $VIRTUAL_ENV ]]
+        then
+                _debug "Détection d'un virtualenv"
+                install_target=''
+        fi
+
+        # on installe les dépendances depuis la liste
+        # si les dépendances étaient déjà présentes, on les met à jour seulement
+        # si elles sont plus vieilles que ce qui est requis
+        if ! $dry_run
+        then
+                pip \
+                        install \
+                        $install_target \
+                        --requirement $requirements_file \
+                        --upgrade-strategy only-if-needed
+
+                error_code=$?
+        else
+                _debug "Installation désactivée en mode dry-run"
+                install_error=0
+        fi
+
+        # on vérifie que tout s'est bien passé
+        if [[ $error_code > 0 ]]
+        then
+                _error "L'installation des dépendances ne s'est pas déroulée
+correctement, erreur ${error_code}"
+                exit 2
+        fi
+
+        _info "Les dépendances on été installées"
+        _info "Pour en savoir plus sur l'installation de dépendances Python,
+consulter : 'https://packaging.python.org/installing/#use-pip-for-installing'"
+}
+
+_error () {
+        ##
+        # Afficher une erreur
+        #
+        >&2 printf "$(tput sgr 0; tput bold)[$(tput setaf 1)ERROR$(tput setaf 9)] %s$(tput sgr 0)\n" "$@"
+}
+
+_warning () {
+        ##
+        # Afficher un avertissement
+        #
+        >&2 printf "$(tput sgr 0)[$(tput setaf 3;tput bold)WARNING$(tput sgr 0)] %s\n" "$@"
+}
+
+_info () {
+        ##
+        # Afficher une information
+        #
+        if ! $quiet
+        then
+                >&1 printf "$(tput sgr 0)[$(tput setaf 4)INFO$(tput setaf 9)] %s\n" "$@"
+        fi
+}
+
+_debug () {
+        ##
+        # Afficher une ligne de débug
+        #
+        if $debug
+        then
+                >&2 printf "$(tput sgr 0)[$(tput setaf 6)DEBUG$(tput setaf 9)] %s\n" "$@"
+        fi
+}
+
+_install "$@"
