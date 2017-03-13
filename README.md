@@ -65,30 +65,30 @@ Il est possible d'utiliser le générateur par une interface en ligne de command
 #### Utiliser la ligne de commande
 
 
-C'est sans doute la façon la plus simple de procéder. L'exécutable `jdd-generator` fournit une interface en ligne de commande pour créer les fichiers des JDD :
+C'est sans doute la façon la plus simple de procéder. L'exécutable `jddgen` fournit une interface en ligne de commande pour créer les fichiers des JDD :
 
 ```sh
-./jdd-generator # paramètres à placer ici
+./jddgen # paramètres à placer ici
 ```
 
 Pour afficher l'aide de la commande :
 
 ```sh
-./jdd-generator -h
+./jddgen -h
 ```
 
 La commande ne génère qu'un seul type de document à la fois (planning ou recueil de résumés) :
 
 ```sh
-./jdd-generator planning # pour le planning
-./jdd-generator booklet # pour le recueil
+./jddgen planning # pour le planning
+./jddgen booklet # pour le recueil
 ```
 
 Chaque sous-commande a sa propre aide :
 
 ```sh
-./jdd-generator planning -h
-./jdd-generator booklet -h
+./jddgen planning -h
+./jddgen booklet -h
 ```
 
 Pour générer tous les documents, il suffit de le lancer les deux commandes successivement. À chaque fois, les fichiers nécessaires à la compilation sont générés.
@@ -96,13 +96,13 @@ Pour générer tous les documents, il suffit de le lancer les deux commandes suc
 On peut également spécifier plusieurs paramètres, comme le dossier de sortie (par défaut, le dossier `jdd`) :
 
 ```sh
-./jdd-generator --output-directory /chemin/vers/le/dossier/de/sortie planning
+./jddgen --output-directory /chemin/vers/le/dossier/de/sortie planning
 ```
 
 Ou la localisation des différents fichiers nécessaires (voir la section sur les fichiers d'entrée) :
 
 ```sh
-./jdd-generator planning --student-file /chemin/vers/le/fichier
+./jddgen planning --student-file /chemin/vers/le/fichier
 ```
 
 Noter que ces deux paramètres ne se placent pas au même endroit.
@@ -114,7 +114,7 @@ Noter que ces deux paramètres ne se placent pas au même endroit.
 S'il y a un problème quelque part dans le processus de génération, il est avisé d'activer le mode de débogage qui augmente la verbosité du programme (il indique ainsi chaque étape de progression du programme) et permet de mieux localiser l'erreur :
 
 ```sh
-./jdd-generator -d planning
+./jddgen -d planning
 ```
 
 
@@ -124,12 +124,12 @@ S'il y a un problème quelque part dans le processus de génération, il est avi
 Pour faciliter l'accès au script, on peut indiquer un alias pour avoir la commande à portée de main :
 
 ```sh
-alias jdd-generator="/chemin/vers/jdd_generator/jdd-generator"
+alias jddgen="/chemin/vers/jdd_generator/jddgen"
 ```
 
 À mettre dans son fichier de configuration de shell favori en adaptant la syntaxe (`.bashrc`, `.cshrc`, `.zshrc`…). Il est déconseillé de déclarer le dossier du projet dans la variable d'environnement `PATH`, car le script `install` serait exécutable depuis n'importe où.
 
-Si on n'aime pas les alias, on peut toujours faire un lien symbolique de `jdd-generator` dans `~/.local/bin/`, mais il faut alors déclarer le module du projet dans la variable d'environnement `PYTHONPATH` (voir la fin de la section sur l'utilisation en module).
+Si on n'aime pas les alias, on peut toujours faire un lien symbolique de `jddgen` dans `~/.local/bin/`, mais il faut alors déclarer le module du projet dans la variable d'environnement `PYTHONPATH` (voir la fin de la section sur l'utilisation en module).
 
 
 #### Utiliser les modules
