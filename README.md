@@ -260,17 +260,17 @@ Bien entendu, il est possible de spécifier un autre nom. Se reporter à la docu
 | `location`      | centre                                      | Pré-formaté                |
 | `email`         | courriel                                    |                            |
 | `title`         | titre de la thèse                           |                            |
-| `s1-name`       | nom encadrant 1                             | Incrémentable              |
-| `s1-origin`     | établissement encadrant 1                   | Incrémentable              |
-| `s1-department` | département encadrant 1                     | Incrémentable              |
-| `s1-unit`       | unité encadrant 1                           | Incrémentable              |
-| `s1-title`      | titre encadrant 1 (docteur professeur etc.) | Incrémentable, pré-formaté |
-| `d1-name`       | nom directeur 1                             | Incrémentable              |
-| `d1-origin`     | établissement directeur 1                   | Incrémentable              |
-| `d1-title`      | titre directeur 1 (docteur professeur)      | Incrémentable, pré-formaté |
+| `s0-name`       | nom encadrant 1                             | Incrémentable              |
+| `s0-origin`     | établissement encadrant 1                   | Incrémentable              |
+| `s0-department` | département encadrant 1                     | Incrémentable              |
+| `s0-unit`       | unité encadrant 1                           | Incrémentable              |
+| `s0-title`      | titre encadrant 1 (docteur professeur etc.) | Incrémentable, pré-formaté |
+| `d0-name`       | nom directeur 1                             | Incrémentable              |
+| `d0-origin`     | établissement directeur 1                   | Incrémentable              |
+| `d0-title`      | titre directeur 1 (docteur professeur)      | Incrémentable, pré-formaté |
 | `funding`       | financement                                 |                            |
 
-Les champs « incrémentables » (tout ce qui a attrait aux encadrants et aux directeurs), peuvent avoir leur numéro incrémenté pour désigner un autre encadrant/directeur (le numéro commence à 1). Par exemple : `s1-name`, puis `s2-name`, `s3-name`…
+Les champs « incrémentables » (tout ce qui a attrait aux encadrants avec `s` et aux directeurs avec `d`), peuvent avoir leur numéro incrémenté pour désigner un autre encadrant/directeur (le numéro commence à 0). Par exemple : `s0-name`, puis `s1-name`, `s2-name`…
 
 Les champs « pré-formatés » (tout ce qui touche aux centres et aux titres) doivent contenir des valeurs particulières. Voir la sections sur la configuration du projet.
 

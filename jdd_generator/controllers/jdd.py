@@ -92,16 +92,14 @@ class BasicController(object):
             supervizors = []
             i = 0
             while True:
-                # On vérifie que le nom de l'encadrant suivant existe et
-                # n'est pas vide.
-                # TODO commencer à 0
-                i += 1
-                if "s{}-name".format(i) not in line or \
-                        not line["s{}-name".format(i)]:
+                prefix = 's{}-'.format(i)
+
+                # on vérifie que le nom de l'encadrant existe et n'est pas vide
+                if prefix + "name" not in line or \
+                        not line[prefix + "name"]:
                             break
 
                 # dans ce cas ajouter l'encadrant
-                prefix = 's{}-'.format(i)
                 supervizors.append(Supervizor(
                     title=line[prefix + 'title'],
                     name=line[prefix + 'name'].title(),
@@ -110,6 +108,8 @@ class BasicController(object):
                     unit=line[prefix + 'unit']
                     ))
 
+                i += 1
+
             # directeurs
             # Même logique que pour les encadrants.  Sauf que les champs
             # concernant les directeurs sont préfixés par `d`, pour "director" :
@@ -117,20 +117,21 @@ class BasicController(object):
             directors = []
             i = 0
             while True:
-                # On vérifie que le nom du directeur suivant existe et n'est
-                # pas vide.
-                i += 1
-                if "d{}-name".format(i) not in line or \
-                        not line["d{}-name".format(i)]:
+                prefix = 'd{}-'.format(i)
+
+                # on vérifie que le nom du directeur existe et n'est pas vide
+                if prefix + "name" not in line or \
+                        not line[prefix + "name"]:
                             break
 
                 # dans ce cas ajouter le directeur
-                prefix = 'd{}-'.format(i)
                 directors.append(Director(
                     title=line[prefix + 'title'],
                     name=line[prefix + 'name'].title(),
                     origin=line[prefix + 'origin']
                     ))
+
+                i += 1
 
             # thèse
             phd = PhD(
