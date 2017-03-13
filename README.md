@@ -1,7 +1,7 @@
 # JDD Generator
 
 
-Cette collection de scripts permet de générer des fichiers LaTeX pour les JDD depuis une série de fichiers `csv`. Le générateur peut créer des fichiers pour le planning et le recueil des résumés courts.
+Cette collection de scripts permet de générer des fichiers LaTeX pour les JDD depuis une série de fichiers `csv`. Le générateur peut créer des fichiers pour le planning et le recueil des résumés courts. Les deux types de documents peuvent être fusionnés dans le même fichier.
 
 
 ## Installation
@@ -32,10 +32,16 @@ Le script a plusieurs options pour le paramétrer, consulter son aide avec la co
 Déployer le projet manuellement signifie en fait installer les dépendances. Elles sont spécifiées dans le projet et il suffit de faire :
 
 ```sh
+pip install --user -r requirements.txt
+```
+
+Si on est dans un virtualenv (ce qui est le mieux), il n'est plus nécessaire de spécifier `--user`. Pour plus d'informations concernant les virtualenvs, consulter cette page du [site de Sam et Max](http://sametmax.com/les-environnement-virtuels-python-virtualenv-et-virtualenvwrapper/).
+
+```sh
 pip install -r requirements.txt
 ```
 
-Dans le cas où Pip n'est pas installé (et impossible à installer dans l'environnement actuel), il est toujours possible de le [récupérer un bootstrap](https://bootstrap.pypa.io/get-pip.py) pour qu'il s'installe lui-même. Une fois le fichier `get-pip.py` récupéré, il suffit de le lancer :
+Dans le cas où Pip n'est pas installé (et impossible à installer dans l'environnement actuel), il est toujours possible de [récupérer sa version bootstrap](https://bootstrap.pypa.io/get-pip.py) pour qu'il s'installe lui-même. Pour l'information, voici [quelques infos sur Pip](http://sametmax.com/votre-python-aime-les-pip/). Une fois le fichier `get-pip.py` récupéré, il suffit de le lancer :
 
 ```sh
 python get-pip.py --user
@@ -47,13 +53,13 @@ Le script d'installation indiqué plus haut s'occupe de toutes ces étapes. Elle
 ## Utilisation
 
 
-Maintenant que le script est installé, on peut l'utiliser.
+Maintenant que le script est installé, on peut l'utiliser !
 
 
 ### Comment utiliser le générateur
 
 
-Il est possible d'utiliser le projet par ligne de commande ou directement en utilisant ses modules.
+Il est possible d'utiliser le générateur par une interface en ligne de commande ou directement en utilisant ses modules.
 
 
 #### Utiliser la ligne de commande
@@ -62,7 +68,7 @@ Il est possible d'utiliser le projet par ligne de commande ou directement en uti
 C'est sans doute la façon la plus simple de procéder. L'exécutable `jdd-generator` fournit une interface en ligne de commande pour créer les fichiers des JDD :
 
 ```sh
-./jdd-generator
+./jdd-generator # paramètres à placer ici
 ```
 
 Pour afficher l'aide de la commande :
@@ -71,27 +77,109 @@ Pour afficher l'aide de la commande :
 ./jdd-generator -h
 ```
 
-Les options supplémentaires permettent de spécifier les fichiers d'entrée (voir la section correspondante) et le dossier de sortie.
-
-S'il y a un problème quelque part dans le processus de génération, il est avisé d'activer le mode de débogage qui augmente la verbosité du programme (il indique ainsi chaque étape) et permet de mieux localiser l'erreur :
+La commande ne génère qu'un seul type de document à la fois (planning ou recueil de résumés) :
 
 ```sh
-./jdd-generator -d
+./jdd-generator planning # pour le planning
+./jdd-generator booklet # pour le recueil
 ```
+
+Chaque sous-commande a sa propre aide :
+
+```sh
+./jdd-generator planning -h
+./jdd-generator booklet -h
+```
+
+Pour générer tous les documents, il suffit de le lancer les deux commandes successivement. À chaque fois, les fichiers nécessaires à la compilation sont générés.
+
+On peut également spécifier plusieurs paramètres, comme le dossier de sortie (par défaut, le dossier `jdd`) :
+
+```sh
+./jdd-generator --output-directory /chemin/vers/le/dossier/de/sortie planning
+```
+
+Ou la localisation des différents fichiers nécessaires (voir la section sur les fichiers d'entrée) :
+
+```sh
+./jdd-generator planning --student-file /chemin/vers/le/fichier
+```
+
+Noter que ces deux paramètres ne se placent pas au même endroit.
+
+
+##### Mode débug
+
+
+S'il y a un problème quelque part dans le processus de génération, il est avisé d'activer le mode de débogage qui augmente la verbosité du programme (il indique ainsi chaque étape de progression du programme) et permet de mieux localiser l'erreur :
+
+```sh
+./jdd-generator -d planning
+```
+
+
+##### Accéder facilement au script
+
 
 Pour faciliter l'accès au script, on peut indiquer un alias pour avoir la commande à portée de main :
 
 ```sh
-alias jdd-generator="/chemin/vers/jdd-generator"
+alias jdd-generator="/chemin/vers/jdd_generator/jdd-generator"
 ```
 
-À mettre dans son fichier de configuration de shell (`.bashrc`, `.cshrc`, `.zshrc`…). Il est déconseillé de déclarer le dossier du projet dans la variable d'environnement `PATH`, car le script `install` serait exécutable depuis n'importe où.
+À mettre dans son fichier de configuration de shell favori en adaptant la syntaxe (`.bashrc`, `.cshrc`, `.zshrc`…). Il est déconseillé de déclarer le dossier du projet dans la variable d'environnement `PATH`, car le script `install` serait exécutable depuis n'importe où.
+
+Si on n'aime pas les alias, on peut toujours faire un lien symbolique de `jdd-generator` dans `~/.local/bin/`, mais il faut alors déclarer le module du projet dans la variable d'environnement `PYTHONPATH` (voir la fin de la section sur l'utilisation en module).
 
 
 #### Utiliser les modules
 
 
-Il est aussi possible d'interagir directement avec les modules de `jdd_generator`. Pour ça, un fichier d'exemple `jdd_generator_sample.py` est fourni. Cela permet d'inclure le générateur dans un autre script Python ou de sauvegarder quelque part les chemins vers les fichiers d'entrée (voir la section correspondante).
+Il est aussi possible d'interagir directement avec les modules de `jdd_generator`. Pour ça, un fichier d'exemple `jdd_generator_sample.py` est fourni. Cette méthode permet d'inclure le générateur dans un autre script Python ou de sauvegarder quelque part les chemins vers les fichiers d'entrée (voir la section correspondante). Pour utiliser le générateur comme ça, un minimum de connaissances en Python et en orienté objet sont nécessaires.
+
+L'exemple donne la structure d'utilisation du projet. Il peut être judicieux d'aller lire la section sur le développement pour avoir quelques détails sur la philosophie du programme. Les modules à utiliser correspondent aux contrôleurs du projet, ils fournissent les commandes pour générer les documents LaTeX depuis les fichiers d'entrée. Trois modules, correspondant aux trois contrôleurs, sont disponibles.
+
+Le contrôleur du planning s'utilise comme ceci :
+
+```python
+from jdd_generator.controllers.planning import PlanningController
+planning = PlanningController()
+
+# on crée le planning en mémoire depuis les fichiers par défaut
+planning.create()
+
+# on écris la représentation du planning en LaTeX sur le disque dans le dossier par défaut
+planning.retrieve()
+```
+
+Le contrôleur du recueil de résumés courts est très similaire. La méthode `create` permet de lire les sources d'entrées (fichiers `csv`, voir la section sur les fichiers d'entrée), tandis que la méthode `retrieve` permet de représenter ces données en LaTeX et d'écrire le résultat sur le disque.
+
+Un dernier contrôleur permet de générer le fichier principal à compiler, le contrôleur des JDD :
+
+```python
+from jdd_generator.controllers.jdd import JddController
+jdd = JddController()
+
+# comme ce contrôleur ne prend aucune donnée en entrée, il n'y a pas de méthode `create`
+
+# on écris la représentation du fichier principar sur le disque dans le dossier par défaut
+jdd.retrieve()
+```
+
+
+##### Afficher la documentation des méthodes
+
+
+Pour plus d'informations sur la façon d'appeler les méthodes (leurs arguments, etc.), voir l'aide des classes dans l'interpréteur :
+
+```python
+>>> from jdd_generator.controllers.planning import PlanningController
+>>> help(PlanningController)
+```
+
+
+##### Importer le module depuis un autre dossier
+
 
 Pour importer le module depuis n'importe où, il suffit de modifier la variable d'environnement `PYTHONPATH` pour qu'elle inclue le dossier du module :
 
@@ -99,7 +187,7 @@ Pour importer le module depuis n'importe où, il suffit de modifier la variable 
 export PYTHONPATH="/chemin/vers/jdd_generator/jdd_generator":$PYTHONPATH
 ```
 
-Oui, il y a deux fois `jdd_generator` : une fois pour le dossier du projet, une fois pour le dossier du module (qui ont le même nom). À mettre dans son fichier de configuration de shell (`.bashrc`, `.cshrc`, `.zshrc`…).
+Oui, il y a deux fois `jdd_generator` : une fois pour le dossier du projet, une fois pour le dossier du module (qui ont le même nom). À mettre dans son fichier de configuration de shell en adaptant la syntaxe (`.bashrc`, `.cshrc`, `.zshrc`…).
 
 
 ### Fichiers d'entrée
@@ -113,13 +201,13 @@ En parlant de `csv`, plusieurs fichiers sont nécessaires :
 
 | Désignation        | Explication                                                           | Utilisation       |
 |--------------------|-----------------------------------------------------------------------|-------------------|
-| `students_file`    | listing des doctorants                                                | planning, recueil |
+| `students_file`    | listing des doctorants et de leur thèse                               | planning, recueil |
 | `repartition_file` | listing des répartitions des présentations des doctorants en sessions | planning, recueil |
 | `planning_file`    | listing des événements du planning                                    | planning          |
 | `abstracts_file`   | listing des résumés courts                                            | recueil           |
 | `booklet_file`     | listing des sections du recueil de résumés courts                     | recueil           |
 
-Certains de ces fichiers pourraient être fusionnés en un seul, particulièrement ceux qui ont attrait au doctorant : `students_file` (qui définit le doctorant et sa thèse), `repartition_file` (qui donne son ordre de passage) et `abstracts_file` (qui donne son résumé court). D'une part, cela amènerait à créer un très gros tableur, d'autre part l'organisation de JDD fait que ces trois fichiers sont remplis successivement (d'abord la liste des doctorants, puis leurs résumés, puis leur répartition). De ce fait, on a besoin de désigner le même doctorant dans chacun des fichiers, pour cela, on fait appel à un ID unique. Cet ID peut être construit de n'importe quelle manière que ce soit, pourvu qu'il soit unique. Une façon de faire peut être `année_nom_prénom` (exemple `1a_kaname_madoka`). Comme spécifié plus tard, il est important que cet ID existe dans les 3 fichiers `csv` mentionnés. Par ailleurs, les photos doivent avoir pour nom de fichier cet ID.
+Certains de ces fichiers pourraient être fusionnés en un seul, particulièrement ceux qui ont attrait au doctorant : `students_file`, `repartition_file` et `abstracts_file`. D'une part, cela amènerait à créer un très gros tableur, d'autre part l'organisation de JDD fait que ces trois fichiers sont remplis successivement (d'abord la liste des doctorants, puis leurs résumés, puis leur répartition). Du fait de cette séparation, on a besoin de désigner le même doctorant dans chacun des fichiers. Pour cela, on fait appel à un ID unique. Cet ID peut être construit de n'importe quelle manière que ce soit, pourvu qu'il soit unique. Une façon de faire peut être `année_nom_prénom` (exemple `1a_kaname_madoka`). Comme spécifié plus tard, il est important que cet ID existe dans les 3 fichiers `csv` mentionnés. Par ailleurs, les photos doivent avoir cet ID pour nom de fichier.
 
 Le projet manipule chaque fichier `csv` avec un ficher de configuration (encore appelé fichier compagnon) qui est un fichier `ini`. Cela permet notamment d'indiquer l'index de chaque colonne et le chemin vers le fichier `csv`. Donc, quand on indique un fichier au générateur, on indique en fait ce fichier `ini`. Un set d'exemple de ces fichiers est disponible dans le dossier principal du projet ; ces fichiers peuvent être copiés et modifiés pour correspondre aux besoins. La structure d'un tel fichier compagnon est la suivante :
 
@@ -154,7 +242,7 @@ Les fichiers compagnons ont les noms par défaut suivant :
 | `abstracts_file`   | `abstracts.ini` |
 | `booklet_file`     | `booklet.ini`   |
 
-Bien entendu, il est possible de spécifier un autre nom. Voir la documentation de l'interface en ligne de commande ou le script d'exemple pour voir comment.
+Bien entendu, il est possible de spécifier un autre nom. Se reporter à la documentation de l'interface en ligne de commande ou au script d'exemple pour voir comment.
 
 
 #### Fichier `students_file`
@@ -270,7 +358,7 @@ Le générateur crée les différents fichiers LaTeX dans un dossier de sortie. 
 
 Par exemple, pour le planning, le générateur crée le fichier `session_0.tex`, `session_1.tex` et le fichier de planning `planning.tex.sample`. Si on veut le modifier, il faut le renommer en `planning.tex`, auquel cas il sera importé par `jdd.tex` à la place de `planning.tex.sample` et ne sera plus écrasé à un prochain appel du générateur. Pareil pour le recueil de résumés.
 
-Il ne reste plus qu'à compiler le fichier principal `jdd.tex` avec `pdflatex`.
+Le fichier `jdd.tex` peut être écrasé. Si des modifications ont été faites dessus, il vaut mieux le copier sous un autre nom. Il ne reste plus qu'à le compiler avec `pdflatex`.
 
 
 ## Développement
@@ -278,11 +366,11 @@ Il ne reste plus qu'à compiler le fichier principal `jdd.tex` avec `pdflatex`.
 
 Le projet a les dépendances suivantes:
 
-* Python 2.7 :
+* Python 2.7 (les dépendances sont spécifiées dans `requirements.txt`) :
  * `colour`, pour la gestion des couleurs ;
  * `jinja2`, pour la gestion des templates ;
  * `argparse`, pour la gestion des arguments passés en ligne de commande.
-* LaTeX v? (tous les paquets sont standards) :
+* LaTeX, testé avec TeXLive 2014 (tous les paquets sont standards) :
  * `inputenc`, pour l'entrée ;
  * `babel`, pour la langue ;
  * `fontenc`, pour l'encodage ;
@@ -303,16 +391,18 @@ Le projet a les dépendances suivantes:
  * `adjustbox`, pour ? ;
  * `calc`, pour calculer des valeurs ;
  * `ifthen`, pour avoir des structures conditionnelles faciles ;
- * `placeins`, pour ? ;
+ * `placeins`, pour forcer les images à rester où on veut ;
  * `import`, pour faciliter les imports relatifs ;
  * `setspace`, pour ? ;
  * `afterpage`, pour ? ;
  * `keyval`, pour passes des options à une macro par clé/valeur.
-* Bash v? (pour le script d'installation) :
+* Bash v4 (pour le script d'installation) :
  * `wget`, pour récupérer Pip.
 
-Le projet utilise Python 2.7 parce que c'est la seule version disponible dans le milieu d'exécution au labo.
+Le projet utilise Python 2.7 parce que c'est la seule version disponible dans le milieu d'exécution au labo. Une transition vers Python 3 le jour où ce sera nécessaire ne devrait pas être trop difficile à faire avec `2to3`.
 
-J'ai beaucoup hésité à utiliser des dépendances, vu à quel point l'environnement Python du labo est pauvre (`argparse` n'est pas disponible, alors qu'il devrait l'être) et vieux (Pip est impossible à installer sans le bootstrap). Notamment pour le templating, j'ai essayé d'aller aussi loin que je pouvais avec `string.Template`, mais ce n'était pas élégant et ça mélangeait du code de template avec du code de manipulation de données. Quand j'ai essayé Jinja2, tous ces problèmes ont disparu et le gain était tel (ne serait-ce que pour simplifier la maintenance et la lisibilité du code) que je me suis dit que ça valait la peine de faire un script d'installation.
+J'ai beaucoup hésité à utiliser des dépendances, vu à quel point l'environnement Python du labo est pauvre (`argparse` n'est pas disponible, alors qu'il devrait l'être) et vieux (Pip est impossible à installer sans son bootstrap). Notamment pour le templating, j'ai essayé d'aller aussi loin que je pouvais avec `string.Template`, mais ce n'était pas élégant et ça mélangeait du code de template avec du code de manipulation de données. Quand j'ai essayé Jinja2, tous ces problèmes ont disparu et le gain était tel (ne serait-ce que pour simplifier la maintenance et la lisibilité du code) que je me suis dit que ça valait la peine de faire un script d'installation.
 
-Ce projet sépare ses différentes parties selon la philosophie MVC (Modèle, Vue, Contrôler). Dans l'idée, le modèle représente les données que l'on traite, la vue s'occupe d'afficher ces données (ici, en fichier LaTeX) et le contrôleur s'occupe de tout le reste (lire les fichiers d'entrée, mettre leurs données dans les modèles, mettre en forme tout ça avec les vues et écrire le résultat sur le disque). Pour plus d'informations sur cette philosophie de développement, je conseille cette bonne introduction du [site de Sam et Max](http://sametmax.com/quest-de-que-mvc-et-a-quoi-ca-sert/).
+Ce projet sépare ses différentes parties selon la philosophie MVC (Modèle, Vue, Contrôler). Dans l'idée, le modèle représente les données que l'on traite, la vue s'occupe d'afficher ces données (ici, en fichier LaTeX) et le contrôleur s'occupe de tout le reste (lire les fichiers d'entrée, mettre leurs données dans les modèles, mettre en forme tout ça avec les vues et écrire le résultat sur le disque). Pour plus d'informations sur cette philosophie de développement, je conseille cette bonne introduction du [site de Sam et Max](http://sametmax.com/quest-de-que-mvc-et-a-quoi-ca-sert/). Pour le projet, les modèles sont dans `jdd_generator/models`, les vues dans `jdd_generator/views` et les contrôleurs dans `jdd_generator/controllers`.
+
+Le projet utilise Jinja2 pour les vues. Les fichiers de template sont dans le dossier `jdd_generator/views/templates`. La syntaxe de Jinja2 a été adaptée à la syntaxe de LaTeX, donc les habitués de ce moteur de template, auront besoin d'un petit temps d'adaptation. Afin de simplifier les templates autant que possible, beaucoup de macros et d'environnements ont été créés. Ils sont définis dans le template du fichier principal.
