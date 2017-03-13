@@ -11,7 +11,7 @@ SECTION_TEMPLATE = 'section.tex_template'
 SECTION_PATTERN = 'section_{}.tex'
 BOOKLET_TEMPLATE = 'booklet.tex_template'
 BOOKLET_PATTERN = 'booklet.tex.sample'
-DIRECTORY_PICTURES = 'pictures'
+PICTURES_TARGET_DIRECTORY = 'pictures'
 
 
 class BookletView(BasicView):
@@ -102,7 +102,7 @@ class BookletView(BasicView):
         self.section_template_loaded = True
 
         # ajouter le dossier des photos
-        section_dict['directory_pictures'] = DIRECTORY_PICTURES
+        section_dict['directory_pictures'] = PICTURES_TARGET_DIRECTORY
 
         # rendre la section
         text = template.render(section_dict)

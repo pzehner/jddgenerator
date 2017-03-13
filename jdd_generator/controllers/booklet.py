@@ -8,8 +8,14 @@ from colour import Color
 from ..utils import utils
 from ..utils.csv_dict import CSVDict
 from ..models.booklet import Section, Abstract
-from .jdd import BasicController
-from ..views.booklet import BookletView, DIRECTORY_PICTURES
+from .jdd import BasicController, OUTPUT_DIRECTORY
+from .planning import STUDENTS_FILE, REPARTITIONS_FILE
+from ..views.booklet import BookletView, PICTURES_TARGET_DIRECTORY
+
+
+BOOKLET_FILE = 'booklet.ini'
+ABSTRACT_FILES = 'abstracts.ini'
+PICTURES_DIRECTORY = 'photos'
 
 
 class BookletController(BasicController):
@@ -36,8 +42,9 @@ class BookletController(BasicController):
         self.sections = []
         self.directory_pictures = ''
 
-    def create(self, booklet_file, abstracts_file, students_file,
-            repartitions_file, directory_pictures):
+    def create(self, booklet_file=BOOKLET_FILE, abstracts_file=ABSTRACT_FILES,
+            students_file=STUDENTS_FILE, repartitions_file=REPARTITIONS_FILE,
+            directory_pictures=PICTURES_DIRECTORY):
         """Crée la structure de données pour le recueil depuis les différents
         fichiers d'entrée.
 
@@ -77,8 +84,11 @@ class BookletController(BasicController):
         # ordonner et répartir les résumés
         self._sort_abstracts()
 
-    def retrieve(self, directory):
+    def retrieve(self, directory=OUTPUT_DIRECTORY):
         """Donne une représentation du recueil de résumés en passant par la vue.
+
+        Appelle la vue pour convertir les données en LaTeX, puis écris le
+        résultat sur le disque et crée l'arborescence.
 
         Args:
             directory (unicode): dossier de sortie où enregistrer les fichiers.
@@ -92,7 +102,7 @@ class BookletController(BasicController):
         directory_booklet = os.path.join(directory, 'booklet')
 
         # écrire
-        self.write(files_content, directory_booklet)
+        self._write(files_content, directory_booklet)
 
         # créer le lien du dossier de photos
         self._create_directory_picture_link(directory_booklet)
@@ -206,7 +216,7 @@ contrôleur".format(abstract=abstract_obj))
                 directeurs.
         """
         # on récupère les thèses par la méthode générique
-        phds = self.get_phds(students_file)
+        phds = self._get_phds(students_file)
 
         # lister tous les sujets
         for code, come_flag, phd in phds:
@@ -339,7 +349,7 @@ photo".format(student=phd.student))
             directory_booklet (unicode): dossier où le recueil est écrit.
         """
         directory_pictures_target = os.path.join(directory_booklet,
-                DIRECTORY_PICTURES)
+                PICTURES_TARGET_DIRECTORY)
 
         # si le chemin était absolu, `join` ne prend pas en compte le premier
         # arguement

@@ -12,7 +12,7 @@ Il suffit d'invoquer le script :
 ```
 
 Ce qui affichera l'aide du script. Le script doit avoir le droit d'exécution
-actif.
+activé.
 
 """
 
@@ -20,18 +20,24 @@ from __future__ import unicode_literals
 from __future__ import absolute_import
 import logging
 from argparse import ArgumentParser
-from jdd_generator.controllers.planning import PlanningController
-from jdd_generator.controllers.booklet import BookletController
-from jdd_generator.controllers.jdd import JddController
+from jdd_generator.controllers.planning import (
+        PlanningController,
+        STUDENTS_FILE,
+        REPARTITIONS_FILE,
+        PLANNING_FILE,
+        )
 
+from jdd_generator.controllers.booklet import (
+        BookletController,
+        BOOKLET_FILE,
+        ABSTRACT_FILES,
+        PICTURES_DIRECTORY,
+        )
 
-OUTPUT_DIRECTORY = 'jdd'
-STUDENTS_FILE = 'listing.ini'
-REPARTITIONS_FILE = 'timings.ini'
-PLANNING_FILE = 'planning.ini'
-BOOKLET_FILE = 'booklet.ini'
-ABSTRACT_FILES = 'abstracts.ini'
-PICTURES_DIRECTORY = 'photos'
+from jdd_generator.controllers.jdd import (
+        JddController,
+        OUTPUT_DIRECTORY,
+        )
 
 
 def get_arg_parser():
@@ -110,14 +116,16 @@ courts des JDD."
             '-b',
             '--booklet-file',
             default=BOOKLET_FILE,
-            help="Chemin du fichier INI pour le listing du recueil."
+            help="Chemin du fichier INI pour le listing du recueil. Par défaut \
+\"{}\"".format(BOOKLET_FILE)
             )
 
     booklet_parser.add_argument(
             '-a',
             '--abstracts-file',
             default=ABSTRACT_FILES,
-            help="Chemin du fichier INI pour le listing des résumés courts."
+            help="Chemin du fichier INI pour le listing des résumés courts. \
+Par défaut \"{}\"".format(ABSTRACT_FILES)
             )
 
     booklet_parser.add_argument(

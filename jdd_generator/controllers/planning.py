@@ -7,7 +7,7 @@ from datetime import timedelta, datetime
 from codecs import open
 from ConfigParser import SafeConfigParser
 from colour import Color
-from .jdd import BasicController
+from .jdd import BasicController, OUTPUT_DIRECTORY
 from ..utils import utils
 from ..utils.csv_dict import CSVDict
 from ..models.planning import Event, Session, Presentation
@@ -16,6 +16,9 @@ from ..views.planning import PlanningView
 from ..config import config
 
 
+STUDENTS_FILE = 'listing.ini'
+REPARTITIONS_FILE = 'timings.ini'
+PLANNING_FILE = 'planning.ini'
 DATE_FORMAT = "%Y-%m-%d"
 TIME_FORMAT = "%H:%M"
 DATETIME_FORMAT = DATE_FORMAT + ' ' + TIME_FORMAT
@@ -44,7 +47,9 @@ class PlanningController(BasicController):
         self.presentations = []
         self.events = []
 
-    def create(self, planning_file, students_file, repartitions_file):
+    def create(self, planning_file=PLANNING_FILE, students_file=STUDENTS_FILE,
+            repartitions_file=REPARTITIONS_FILE):
+
         """Crée la structure de donnée depuis les différents fichiers d'entrée.
 
         Args:
@@ -74,8 +79,11 @@ class PlanningController(BasicController):
         # assigner les présentations dans l'ordre aux sessions
         self._sort_presentations()
 
-    def retrieve(self, directory):
+    def retrieve(self, directory=OUTPUT_DIRECTORY):
         """Donne une représentation du planning en passant par la vue.
+
+        Appelle la vue pour convertir les données en LaTeX, puis écris le
+        résultat sur le disque et crée l'arborescence.
 
         Args:
             directory (unicode): dossier de sortie où enregistrer les fichiers.
@@ -89,7 +97,7 @@ class PlanningController(BasicController):
         directory_planning = os.path.join(directory, 'planning')
 
         # écrire
-        self.write(files_content, directory_planning)
+        self._write(files_content, directory_planning)
 
     def _create_events(self, planning_file):
         """Extraire les données du planning.
@@ -197,7 +205,7 @@ class PlanningController(BasicController):
 
         # obtenir la liste des thèses depuis le fichier de listing des
         # doctorants
-        phds = self.get_phds(students_file)
+        phds = self._get_phds(students_file)
 
         # on crée les présentations depuis la liste des thèses
         for code, come_flag, phd in phds:

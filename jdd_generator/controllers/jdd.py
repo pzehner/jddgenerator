@@ -10,11 +10,14 @@ from ..config import config
 from ..models.jdd import Student, PhD, Supervizor, Director
 
 
+OUTPUT_DIRECTORY = 'jdd'
+
+
 class BasicController(object):
     """Contrôleur générique utilisé comme base pour les autres contrôleurs du
     projet.
 
-    Ce contrôleur n'a pas pour but d'être instancié. La méthode `write`
+    Ce contrôleur n'a pas pour but d'être instancié. La méthode `_write`
     permet d'écrire des données sur le disque. Typiquement, il s'agit des
     données générées par la méthode `retrieve` définie dans les classes
     filles.
@@ -25,7 +28,7 @@ class BasicController(object):
     """
     logger = logging.getLogger('controllers.jdd.BasicController')
 
-    def get_phds(self, students_file):
+    def _get_phds(self, students_file):
         """Récupère les thèses depuis la liste des doctorants.
 
         Cette méthode est utilisée pour la génération du listing et du recueil
@@ -42,7 +45,7 @@ class BasicController(object):
                 unicode: code du doctorant, son identifiant unique utilisé à
                     d'autres endroits.
                 bool: `True` si le doctorant est présent aux JDD, `False`
-                    suivant.
+                    sinon.
                 :obj:`PhD`: thèse, contenant le doctorant, le sujet, les
                     encadrants et les directeurs.
             }
@@ -152,7 +155,7 @@ class BasicController(object):
 
         return phds
 
-    def write(self, text, directory):
+    def _write(self, text, directory):
         """Écrit une liste de données formatées dans un fichier texte.
 
         Args:
@@ -164,7 +167,7 @@ class BasicController(object):
         if isinstance(text, list):
             # écrire les fichiers
             for text_item in text:
-                self.write(text_item, directory)
+                self._write(text_item, directory)
 
             return
 
@@ -210,7 +213,7 @@ class JddController(BasicController):
     """
     logger = logging.getLogger('controllers.jdd.JddController')
 
-    def retrieve(self, directory):
+    def retrieve(self, directory=OUTPUT_DIRECTORY):
         """Donne une représentation des sessions en passant par la vue.
 
         Args:
@@ -223,4 +226,4 @@ class JddController(BasicController):
         main = view.retrieve()
 
         # écrire le résulat
-        self.write(main, directory)
+        self._write(main, directory)
