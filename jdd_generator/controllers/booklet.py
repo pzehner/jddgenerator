@@ -245,6 +245,9 @@ contrôleur".format(abstract=abstract_obj))
                 self.logger.warning("Le doctorant \"{student}\" n'a pas de \
 photo".format(student=phd.student))
 
+                # ne plus faire référence à la photo
+                phd.student.picture = ''
+
             # ajouter la thèse
             abstract.set_phd(phd)
 

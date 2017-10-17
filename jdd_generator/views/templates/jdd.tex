@@ -153,12 +153,17 @@
   \setlength\topsep{0pt}
   \setlength\parskip{0pt}
   \begin{center}
-    \begin{minipage}[t]{0.17\textwidth}
-      \vspace{2pt}
-      \clipgraphics{3cm}{\jdd@picture}
-    \end{minipage}
-    \hfill
-    \begin{minipage}[t]{0.81\textwidth}
+    \ifthenelse{\equal{\jdd@picture}{}}{%
+      \def\booklettablesize{\textwidth}%
+    }{%
+      \def\booklettablesize{0.81\textwidth}%
+      \begin{minipage}[t]{0.17\textwidth}
+        \vspace{2pt}
+        \clipgraphics{3cm}{\jdd@picture}
+      \end{minipage}
+      \hfill
+    }
+    \begin{minipage}[t]{\booklettablesize}
       \vspace{2pt}
       \begin{tabularx}{\textwidth}{R{3.5cm}X}
         \textbf{Courriel} & \href{mailto:\jdd@email}{\nolinkurl{\jdd@email}} \\

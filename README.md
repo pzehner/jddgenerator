@@ -338,6 +338,8 @@ Les photos sont utilisées pour la génération du recueil des résumés courts.
 
 La photo est automatiquement recadrée pour obtenir un carré.
 
+Si, pour une raison ou une autre, la photo d'un doctorant est introuvable, une notification apparait dans les logs à la génération. Dans le document final, l'espace que devait occuper la photo est occupé par les informations sur la thèse.
+
 Lors de la génération du recueil, si un dossier de photos ne se trouve pas déjà dans la structure de fichiers générés, un lien symbolique est automatiquement créé depuis le dossier de photos source.
 
 
