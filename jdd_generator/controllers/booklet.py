@@ -1,10 +1,12 @@
 #-*- coding: utf8 -*-
 from __future__ import unicode_literals
 from __future__ import absolute_import
+
 import os
 import logging
 from glob import glob
 from colour import Color
+
 from ..utils import utils
 from ..utils.csv_dict import CSVDict
 from ..models.booklet import Section, Abstract
@@ -21,7 +23,7 @@ PICTURES_DIRECTORY = 'photos'
 class BookletController(BasicController):
     """Contrôleur pour la génération des fichiers du recueil de résumés courts.
 
-    Le contrôleur donne accos aux méthodes pour la génération des fichiers du
+    Le contrôleur donne accès aux méthodes pour la génération des fichiers du
     recueil de résumés courts. La méthode `create` récupère les données des
     fichiers d'entrée, puis les ordonne avec les classes des modèles. La méthode
     `retrieve` envoit ces données à la vue pour les formatter en fichiers LaTeX.
@@ -243,7 +245,7 @@ contrôleur".format(abstract=abstract_obj))
                 self.logger.warning("Le doctorant \"{student}\" n'a pas de \
 photo".format(student=phd.student))
 
-            # anouter la thèse
+            # ajouter la thèse
             abstract.set_phd(phd)
 
             self.logger.debug("Ajout la thèse \"{phd}\" au résumé \

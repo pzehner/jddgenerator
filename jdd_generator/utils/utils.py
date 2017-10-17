@@ -10,9 +10,11 @@ accès.
 
 from __future__ import unicode_literals
 from __future__ import absolute_import
+
 import locale
 from string import printable
 from datetime import datetime
+
 from colour import Color
 
 

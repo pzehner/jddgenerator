@@ -1,11 +1,13 @@
 #-*- coding: utf8 -*-
 from __future__ import unicode_literals
 from __future__ import absolute_import
+
 import csv
 import os
 import string
-from ConfigParser import SafeConfigParser
 from codecs import open
+
+from ConfigParser import SafeConfigParser
 
 
 class CSVDict:
@@ -18,7 +20,8 @@ class CSVDict:
     Pour utiliser un objet `CSVDict`, il faut créer une instance de la classe
     puis lui demander de lire ce fichier INI :
 
-    >>> csv_dict = CSVDict() >>> csv_dict.read('my_ini_file.ini')
+    >>> csv_dict = CSVDict()
+    >>> csv_dict.read('my_ini_file.ini')
 
     Si le fichier est correct et que tout se passe bien, on peut alors pour
     chaque ligne du fichier accéder à une colonne par son nom :

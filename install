@@ -276,7 +276,7 @@ _check_path () {
 dossier local qui contient les exécutables. Pour cela, ajouter dans le fichier
 de configuration du shell (par exemple dans '.bash_profile', '.bashrc' ou selon
 le shell) la ligne suivante :
-PATH=${local_bin_directory}:\$PATH"
+export PATH=${local_bin_directory}:\$PATH"
 
                 # mettre à jour `PATH` tout de suite
                 export PATH=$PATH:${local_bin_directory}

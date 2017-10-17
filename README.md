@@ -3,6 +3,8 @@
 
 Cette collection de scripts permet de générer des fichiers LaTeX pour les JDD depuis une série de fichiers `csv`. Le générateur peut créer des fichiers pour le planning et le recueil des résumés courts. Les deux types de documents peuvent être fusionnés dans le même fichier.
 
+Ce projet a été réalisé pour et sous Linux. Je n'ai pas testé son fonctionnement sous Windows.
+
 
 ## Installation
 
@@ -91,7 +93,7 @@ Chaque sous-commande a sa propre aide :
 ./jddgen booklet -h
 ```
 
-Pour générer tous les documents, il suffit de le lancer les deux commandes successivement. À chaque fois, les fichiers nécessaires à la compilation sont générés.
+Pour générer tous les documents, il suffit de lancer les deux commandes successivement. À chaque fois, les fichiers nécessaires à la compilation sont générés.
 
 On peut également spécifier plusieurs paramètres, comme le dossier de sortie (par défaut, le dossier `jdd`) :
 
@@ -117,6 +119,11 @@ S'il y a un problème quelque part dans le processus de génération, il est avi
 ./jddgen -d planning
 ```
 
+Comme les logs sont très verbeux, il peut être judicieux de rediriger l'erreur standard du programme vers un fichier pour l'analyser plus facilement :
+
+```sh
+./jddgen -d planning 2>log
+```
 
 ##### Accéder facilement au script
 
@@ -135,7 +142,7 @@ Si on n'aime pas les alias, on peut toujours faire un lien symbolique de `jddgen
 #### Utiliser les modules
 
 
-Il est aussi possible d'interagir directement avec les modules de `jdd_generator`. Pour ça, un fichier d'exemple `jdd_generator_sample.py` est fourni. Cette méthode permet d'inclure le générateur dans un autre script Python ou de sauvegarder quelque part les chemins vers les fichiers d'entrée (voir la section correspondante). Pour utiliser le générateur comme ça, un minimum de connaissances en Python et en orienté objet sont nécessaires.
+Il est aussi possible d'interagir directement avec les modules de `jdd_generator`. Pour ça, un fichier d'exemple `jdd_generator.sample.py` est fourni. Cette méthode permet d'inclure le générateur dans un autre script Python ou de sauvegarder quelque part les chemins vers les fichiers d'entrée (voir la section correspondante). Pour utiliser le générateur comme ça, un minimum de connaissances en Python et en programmation orientée objet sont nécessaires.
 
 L'exemple donne la structure d'utilisation du projet. Il peut être judicieux d'aller lire la section sur le développement pour avoir quelques détails sur la philosophie du programme. Les modules à utiliser correspondent aux contrôleurs du projet, ils fournissent les commandes pour générer les documents LaTeX depuis les fichiers d'entrée. Trois modules, correspondant aux trois contrôleurs, sont disponibles.
 
@@ -278,12 +285,15 @@ Les champs « pré-formatés » (tout ce qui touche aux centres et aux titres) d
 #### Fichier `repartition_file`
 
 
-| Champ     | Description              |
-|-----------|--------------------------|
-| `code`    | ID                       |
-| `length`  | durée en minutes         |
-| `session` | numéro de session        |
-| `order`   | ordre pour le classement |
+| Champ     | Description               |
+|-----------|---------------------------|
+| `code`    | ID                        |
+| `length`  | durée en minutes          |
+| `day`     | numéro du jour de passage |
+| `session` | numéro de session         |
+| `order`   | ordre pour le classement  |
+
+L'ordre (`order`) est propre à la session.
 
 
 #### Fichier `planning_file`
@@ -319,6 +329,16 @@ Les champs « pré-formatés » (tout ce qui touche aux centres et aux titres) d
 | `number`     | numéro de la section                                                                      |
 | `color`      | couleur du bandeau de l'événement (si la couleur commence par # elle est traitée en hexa) |
 | `color-mode` | mode de représentation de la couleur (rgb, hsl... peut être vide)                         |
+
+
+### Dossier de photos
+
+
+Les photos sont utilisées pour la génération du recueil des résumés courts. Le dossier par défaut est `photos`. À l'intérieur, comme indiqué plus haut, la photo d'un doctorant doit avoir pour nom de fichier son code (plus l'extension du fichier, bien entendu).
+
+La photo est automatiquement recadrée pour obtenir un carré.
+
+Lors de la génération du recueil, si un dossier de photos ne se trouve pas déjà dans la structure de fichiers générés, un lien symbolique est automatiquement créé depuis le dossier de photos source.
 
 
 ### Fichier de configuration
@@ -393,8 +413,8 @@ Le projet a les dépendances suivantes:
  * `ifthen`, pour avoir des structures conditionnelles faciles ;
  * `placeins`, pour forcer les images à rester où on veut ;
  * `import`, pour faciliter les imports relatifs ;
- * `setspace`, pour ? ;
- * `afterpage`, pour ? ;
+ * `setspace`, pour gérer les interlignes ;
+ * `afterpage`, pour exécuter des commandes après un saut de page ;
  * `keyval`, pour passes des options à une macro par clé/valeur.
 * Bash v4 (pour le script d'installation) :
  * `wget`, pour récupérer Pip.
@@ -405,4 +425,4 @@ J'ai beaucoup hésité à utiliser des dépendances, vu à quel point l'environn
 
 Ce projet sépare ses différentes parties selon la philosophie MVC (Modèle, Vue, Contrôler). Dans l'idée, le modèle représente les données que l'on traite, la vue s'occupe d'afficher ces données (ici, en fichier LaTeX) et le contrôleur s'occupe de tout le reste (lire les fichiers d'entrée, mettre leurs données dans les modèles, mettre en forme tout ça avec les vues et écrire le résultat sur le disque). Pour plus d'informations sur cette philosophie de développement, je conseille cette bonne introduction du [site de Sam et Max](http://sametmax.com/quest-de-que-mvc-et-a-quoi-ca-sert/). Pour le projet, les modèles sont dans `jdd_generator/models`, les vues dans `jdd_generator/views` et les contrôleurs dans `jdd_generator/controllers`.
 
-Le projet utilise Jinja2 pour les vues. Les fichiers de template sont dans le dossier `jdd_generator/views/templates`. La syntaxe de Jinja2 a été adaptée à la syntaxe de LaTeX, donc les habitués de ce moteur de template, auront besoin d'un petit temps d'adaptation. Afin de simplifier les templates autant que possible, beaucoup de macros et d'environnements ont été créés. Ils sont définis dans le template du fichier principal.
+Le projet utilise Jinja2 pour les vues. Les fichiers de template sont dans le dossier `jdd_generator/views/templates`. La syntaxe de Jinja2 a été adaptée à la syntaxe de LaTeX, donc les habitués de ce moteur de template auront besoin d'un petit temps d'adaptation. Afin de simplifier les templates autant que possible, beaucoup de macros et d'environnements ont été créés. Ils sont définis dans le template du fichier principal.

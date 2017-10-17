@@ -1,9 +1,11 @@
 #-*- coding: utf8 -*-
 from __future__ import unicode_literals
 from __future__ import absolute_import
+
 import logging
 import os
 from codecs import open
+
 from ..views.jdd import JddView
 from ..utils.csv_dict import CSVDict
 from ..config import config

@@ -16,10 +16,13 @@ activé.
 
 """
 
+
 from __future__ import unicode_literals
 from __future__ import absolute_import
+
 import logging
 from argparse import ArgumentParser
+
 from jdd_generator.controllers.planning import (
         PlanningController,
         STUDENTS_FILE,

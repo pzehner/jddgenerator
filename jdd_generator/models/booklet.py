@@ -1,9 +1,12 @@
 #-*- coding: utf8 -*-
 from __future__ import unicode_literals
 from __future__ import absolute_import
+
 import os
 import logging
+
 from colour import Color
+
 from .jdd import PhD
 
 
