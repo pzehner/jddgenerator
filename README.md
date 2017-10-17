@@ -383,6 +383,12 @@ Par exemple, pour le planning, le générateur crée le fichier `session_0.tex`,
 Le fichier `jdd.tex` peut être écrasé. Si des modifications ont été faites dessus, il vaut mieux le copier sous un autre nom. Il ne reste plus qu'à le compiler avec `pdflatex`.
 
 
+## Structure d'exemple
+
+
+Le dossier `samples` contient un exemple minimal qui peut servir de base de départ. Il ne contient qu'un seul doctorant et 8 sessions (ce qui correspond à 2 jours de JDD).
+
+
 ## Développement
 
 

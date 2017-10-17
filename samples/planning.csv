@@ -1,0 +1,17 @@
+Type	Numéro	Jour	Heure début	Heure fin	Chairman	Color mode	Color
+Introduction		2016/01/19	09:00	09:10	Sayaka Miki		#ffffce
+Session	1	2016/01/19	09:10	10:35	Mami Tomoe	rgb	0.6745098 , 0.79607843, 0.97647059
+Pause		2016/01/19	10:35	10:40			#ffffce
+Session	2	2016/01/19	10:40	11:55	Kyouko Sakura	rgb	0.57254902, 0.59215686, 0.81176471
+Posters	1	2016/01/19	11:55	13:30			#ffffce
+Session	3	2016/01/19	13:30	14:55	Hitomi Shizuki	rgb	0.75294118, 0.84705882, 0.92941176
+Pause		2016/01/19	14:55	15:00			#ffffce
+Session	4	2016/01/19	15:00	16:00	Kyousuke Kamijou	rgb	0.6627451 , 0.8       , 0.93333333
+Session	5	2016/01/20	09:00	10:40	Junko Kaname	rgb	0.8       , 0.82352941, 0.86666667
+Pause		2016/01/20	10:40	10:45			#ffffce
+Session	6	2016/01/20	10:45	12:00	Tomohisa Kaname	rgb	0.70980392, 0.75686275, 0.8745098
+Posters	2	2016/01/20	12:00	13:30			#ffffce
+Session	7	2016/01/20	13:30	14:55	Tatsuya Kaname	rgb	0.74117647, 0.85490196, 0.8745098
+Pause		2016/01/20	14:55	15:00			#ffffce
+Session	8	2016/01/20	15:00	16:00	Kajuko Saotome	rgb	0.84705882, 0.82745098, 0.85098039
+Conclusion		2016/01/20	16:00	16:10	Sayaka Miki		#ffffce
