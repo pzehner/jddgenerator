@@ -8,7 +8,6 @@
 \usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
 \usepackage{tabularx}
 \usepackage{booktabs}
-\usepackage{lipsum}
 \usepackage{xcolor}
 \usepackage{colortbl}
 \usepackage{eso-pic}
@@ -90,13 +89,15 @@
   % #2 couleur
   % #3 début-fin
   % #4 chairman
+  \minipage{\textwidth}
   \event{Session #1}{#2}{#3}{#4}
-  \vspace{0.1cm}
+  \vspace{-0.1cm}
 
   \tabularx{\textwidth}{C{1.9cm}Xl}
 }{
   \bottomrule
   \endtabularx
+  \endminipage
 }
 
 % macro pour une présentation de  session
