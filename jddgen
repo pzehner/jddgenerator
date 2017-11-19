@@ -42,6 +42,8 @@ from jdd_generator.controllers.jdd import (
         OUTPUT_DIRECTORY,
         )
 
+from jdd_generator.config import set_config as set_config
+
 
 def get_arg_parser():
     """Créer le parseur des arguments d'entrée.
@@ -70,6 +72,12 @@ des résumés courts des JDD."
             help="Dossier où générer les fichiers. Par défaut \"{}\".".format(
                 OUTPUT_DIRECTORY
                 )
+            )
+
+    parser.add_argument(
+            '-c',
+            '--config',
+            help="Utiliser un autre fichier de configuration."
             )
 
     subparsers = parser.add_subparsers()
@@ -225,6 +233,15 @@ def set_logging(args):
         logging.basicConfig(level=logging.INFO)
 
 
+def load_config(args):
+    """Charge la config
+
+    Args:
+        args (:obj:`argparse.Namespace`): arguments d'entrée parsés.
+    """
+    set_config(args.config)
+
+
 if __name__ == '__main__':
     # créer le parseur et obtenir les arguments d'entrée
     parser = get_arg_parser()
@@ -232,6 +249,9 @@ if __name__ == '__main__':
 
     # mettre en place le logging
     set_logging(args)
+
+    # charger la config
+    load_config(args)
 
     # générer les fichiers
     args.func(args)

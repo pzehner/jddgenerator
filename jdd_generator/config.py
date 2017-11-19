@@ -3,6 +3,8 @@ from __future__ import unicode_literals
 from __future__ import absolute_import
 
 import os
+import sys
+import logging
 from codecs import open
 
 from ConfigParser import SafeConfigParser
@@ -11,18 +13,35 @@ from ConfigParser import SafeConfigParser
 CONFIG_FILE_NAME = 'config.ini'
 
 
-# préparer le chemin du fichier de config
-_jdd_generator_path = os.path.dirname(os.path.abspath(__file__))
-_config_file_path = os.path.join(_jdd_generator_path, CONFIG_FILE_NAME)
+logger = logging.getLogger("config")
 
 
-# vérifier que le fichier existe
-if not os.path.isfile(_config_file_path):
-    message = "Le fichier de configuration 'config.ini' n'a pas été trouvé"
-    raise IOError(message)
-
-
-# charger la config
+# créer une config vide
 config = SafeConfigParser()
-with open(_config_file_path, 'r', encoding='utf8') as file:
-    config.readfp(file)
+
+
+def set_config(path=None):
+    """Charge un fichier de configuration dans le module
+
+    La fonction altère directement l'objet `config` dans le module.
+
+    Args:
+        path (unicode): chemin vers le fichier de config.
+    """
+    # préparer le chemin du fichier de config
+    if path is None:
+        jdd_generator_path = os.path.dirname(os.path.abspath(__file__))
+        config_file_path = os.path.join(_jdd_generator_path, CONFIG_FILE_NAME)
+
+    else:
+        config_file_path = path
+        logger.info("Charge le fichier de config \"{}\"".format(config_file_path))
+
+    # vérifier que le fichier existe
+    if not os.path.isfile(config_file_path):
+        raise IOError("Le fichier de configuration \"{}\" n'a pas été \
+trouvé".format(config_file_path).encode(sys.stdout.encoding))
+
+    # charger la config
+    with open(config_file_path, 'r', encoding='utf8') as file:
+        config.readfp(file)

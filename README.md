@@ -348,7 +348,11 @@ Lors de la génération du recueil, si un dossier de photos ne se trouve pas dé
 
 La configuration du projet est stockée dans le fichier `jdd_generator/config.ini`. Chacune de ses sections correspond à une partie des paramètres.
 
-Ce fichier peut être modifié pour s'adapter aux besoins.
+Pour modifier ce fichier, il est préférable de le copier ailleurs, de modifier la copie seulement, puis d'indiquer à `jddgen` de l'utiliser avec la commande `-c` :
+
+```sh
+jddgen -c chemin/vers/le/fichier.ini ...
+```
 
 
 #### Configuration des titres dans `[titles]`
