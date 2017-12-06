@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from __future__ import absolute_import
 
 import os
+import sys
 import logging
 from datetime import timedelta, datetime
 from codecs import open
@@ -336,7 +337,7 @@ n'est attribuée à aucun jour".format(
                 raise ValueError("La fin de la dernière présentation de \
 \"{session}\" a lieu après l'heure de fin de cette session".format(
                         session=session
-                        ))
+                        ).encode(sys.stderr.encoding))
 
     def _get_presentations_by_session_number(self, number):
         """Retourne une liste de présentations de la même session.

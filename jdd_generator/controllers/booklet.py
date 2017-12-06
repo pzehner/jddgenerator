@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from __future__ import absolute_import
 
 import os
+import sys
 import logging
 from glob import glob
 from colour import Color
@@ -120,7 +121,7 @@ class BookletController(BasicController):
         # on vérifie que le dossier existe
         if not os.path.isdir(directory_pictures):
             raise ValueError("Le dossier de photos \"{}\" n'est pas \
-valide".format(directory_pictures))
+valide".format(directory_pictures).encode(sys.stderr.encoding))
 
         # on le charge
         self.directory_pictures = directory_pictures

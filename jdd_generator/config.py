@@ -46,7 +46,7 @@ def set_config(path=None):
     # vérifier que le fichier existe
     if not os.path.isfile(config_file_path):
         raise IOError("Le fichier de configuration \"{}\" n'a pas été \
-trouvé".format(config_file_path).encode(sys.stdout.encoding))
+trouvé".format(config_file_path).encode(sys.stderr.encoding))
 
     # charger la config
     with open(config_file_path, 'r', encoding='utf8') as file:

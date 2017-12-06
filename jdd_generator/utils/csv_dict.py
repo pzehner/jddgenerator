@@ -4,6 +4,7 @@ from __future__ import absolute_import
 
 import csv
 import os
+import sys
 import string
 from codecs import open
 
@@ -92,11 +93,12 @@ class CSVDict:
         # vérifier l'existence du fichier de config
         if not os.path.isfile(config_file):
             raise IOError("Impossible de trouver le fichier \
-compagnon '{}'".format(config_file))
+compagnon '{}'".format(config_file).encode(sys.stderr.encoding))
 
         # vérifier que le fichier est un fichier INI
         if os.path.splitext(config_file)[1].lower() != '.ini':
-            raise ValueError("Le fichier d'entrée doit être un fichier INI")
+            raise ValueError("Le fichier d'entrée doit être un fichier \
+INI".encode(sys.stderr.encoding))
 
         # lire la config
         config = SafeConfigParser()
@@ -105,11 +107,11 @@ compagnon '{}'".format(config_file))
         # vérifier si le fichier est valide
         if not config.has_section('info'):
             raise ValueError("Le fichier compagnon doit avoir une \
-section 'info'")
+section 'info'".encode(sys.stderr.encoding))
 
         if not config.has_section('fields'):
             raise ValueError("Le fichier compagnon doit avoir une \
-section 'fields'")
+section 'fields'".encode(sys.stderr.encoding))
 
         # récupérer les infos optionnelles
         if config.has_option('info', 'skip'):
@@ -121,7 +123,7 @@ section 'fields'")
         # récupérer le nom du fichier csv
         if not config.has_option('info', 'file'):
             raise ValueError("Le fichier compagnon doit avoir une \
-clé 'file' dans la section 'info'")
+clé 'file' dans la section 'info'".encode(sys.stderr.encoding))
 
         # on ajoute le chemin du dossien du fichier compagnon
         file_name = os.path.join(
@@ -147,7 +149,7 @@ clé 'file' dans la section 'info'")
         # vérifier l'existence du fichier csv
         if not os.path.isfile(csv_file):
             raise IOError("Impossible de trouver le fichier \
-CSV '{}'".format(csv_file))
+CSV '{}'".format(csv_file).encode(sys.stderr.encoding))
 
         # lire le fichier csv
         # on utilise le délimiteur adéquat

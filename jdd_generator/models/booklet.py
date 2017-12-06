@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from __future__ import absolute_import
 
 import os
+import sys
 import logging
 
 from colour import Color
@@ -57,7 +58,8 @@ class Section(object):
             abstract (:obj:`Abstract`): résumé à ajouter.
         """
         if not isinstance(abstract, Abstract):
-            raise ValueError("Le résumé doit être un objet Abstract")
+            raise ValueError("Le résumé doit être un objet \
+Abstract".encode(sys.stderr.encoding))
 
         self.abstracts.append(abstract)
         self.logger.debug("Ajoute le résumé \"{abstract}\" à la section \
@@ -77,7 +79,8 @@ class Section(object):
         """
         amount = self.abtracts_amount
         if not -amount <= id < amount:
-            raise IndexError("L'index de résumé demandé n'existe pas")
+            raise IndexError("L'index de résumé demandé n'existe \
+pas".encode(sys.stderr.encoding))
 
         self.logger.debug("Supprime le résumé \"{abstract}\" de la section \
 \"{section}\"".format(
@@ -151,8 +154,8 @@ class Abstract(object):
         """
         # vérifier que le phd est un objet valide
         if not isinstance(phd, PhD):
-            message = "La thèse doit être un objet PhD"
-            raise ValueError(message)
+            raise ValueError("La thèse doit être un objet \
+PhD".encode(sys.stderr.encoding))
 
         # ajouter l'objet
         self.phd = phd

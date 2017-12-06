@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 from __future__ import absolute_import
 
+import sys
 import logging
 from datetime import datetime, timedelta
 
@@ -138,8 +139,8 @@ class Session(Event):
         """
         # on vérifie que la présentation à ajouter est le bon objet
         if not isinstance(presentation, Presentation):
-            message = "La présentation doit être un objet Presentation"
-            raise ValueError(message)
+            raise ValueError("La présentation doit être un objet \
+Presentation".encode(sys.stderr.encoding))
 
         # on l'ajoute à la fin
         self.presentations.append(presentation)
@@ -162,8 +163,8 @@ la "{session}"'.format(
         # on vérifie que l'index est valide
         amount = self.presentations_amount
         if not -amount <= id < amount:
-            message = "L'index de présentation demandé n'existe pas"
-            raise IndexError(message)
+            raise IndexError("L'index de présentation demandé n'existe \
+pas".encode(sys.stderr.encoding))
 
         # on enlève la présentation
         self.logger.debug('Supprime la présentation "{presentation}" de \
@@ -237,8 +238,8 @@ class Presentation(object):
         """
         # vérifier que le phd est un objet valide
         if not isinstance(phd, PhD):
-            message = "La thèse doit être un objet PhD"
-            raise ValueError(message)
+            raise ValueError("La thèse doit être un objet \
+PhD".encode(sys.stderr.encoding))
 
         # ajouter l'objet
         self.phd = phd

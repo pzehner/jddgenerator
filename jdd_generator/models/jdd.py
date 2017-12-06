@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 from __future__ import absolute_import
 
+import sys
 import logging
 
 from ConfigParser import NoOptionError
@@ -173,12 +174,13 @@ class PhD(object):
         """
         # vérifier que le doctorant est un objet valide
         if not isinstance(student, Student):
-            message = "Le doctorant doit être un objet Student"
-            raise ValueError(message)
+            raise ValueError("Le doctorant doit être un objet \
+Student".encode(sys.stderr.encoding))
 
         # ajouter l'objet
         self.student = student
-        self.logger.debug('Ajoute le doctorant "{student}" à la thèse "{phd}"'.format(
+        self.logger.debug('Ajoute le doctorant "{student}" à la thèse \
+"{phd}"'.format(
             student=student,
             phd=self
             ))
@@ -211,8 +213,8 @@ class PhD(object):
         """
         # on vérifie que le directeur est le bon objet
         if not isinstance(director, Director):
-            message = "Un directeur de thèse doit être un objet Director"
-            raise ValueError(message)
+            raise ValueError("Un directeur de thèse doit être un objet \
+Director".encode(sys.stderr.encoding))
 
         # on ajoute le directeur
         self.directors.append(director)
@@ -245,8 +247,8 @@ class PhD(object):
         # on vérifie que l'index est contenu dans la liste
         amount = self.directors_amount
         if not -amount <= id < amount:
-            message = "L'index du directeur demandé n'existe pas"
-            raise IndexError(message)
+            raise IndexError("L'index du directeur demandé n'existe \
+pas".encode(sys.stderr.encoding))
 
         # on supprime le directeur
         self.logger.debug('Supprime le directeur "{director}" de la thèse "{phd}"'.format(
@@ -265,8 +267,8 @@ class PhD(object):
         """
         # on vérifie que l'encadrant est le bon objet
         if not isinstance(supervizor, Supervizor):
-            message = "Un encadrant doit être un objet Supervizor"
-            raise ValueError(message)
+            raise ValueError("Un encadrant doit être un objet \
+Supervizor".encode(sys.stderr.encoding))
 
         # on ajoute l'encadrant
         self.supervizors.append(supervizor)
@@ -298,11 +300,12 @@ class PhD(object):
         # on vérifie que l'index est contenu danst la liste
         amount = self.supervizors_amount
         if not -amount <= id < amount:
-            message = "L'index de l'encadrant demandé n'existe pas"
-            raise IndexError(message)
+            raise IndexError("L'index de l'encadrant demandé n'existe \
+pas".encode(sys.stderr.encoding))
 
         # on supprime l'encadrant
-        self.logger.debug('Supprime l\'encadrant "{supervizor}" de la thèse "{phd}"'.format(
+        self.logger.debug('Supprime l\'encadrant "{supervizor}" de la thèse \
+"{phd}"'.format(
             supervizor=self.supervizors[id],
             phd=self
             ))
