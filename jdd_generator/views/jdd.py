@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from __future__ import absolute_import
 
 import os
+import sys
 import logging
 from codecs import open
 
@@ -11,8 +12,13 @@ from jinja2 import Environment, FileSystemLoader
 from ..utils import utils
 
 
+filesystem_encoding = sys.getfilesystemencoding()
+
+
 TEMPLATE_DIRECTORY = os.path.join(
-        os.path.dirname(os.path.abspath(__file__)),
+        os.path.dirname(os.path.abspath(
+            __file__.decode(filesystem_encoding))
+            ),
         'templates'
         )
 

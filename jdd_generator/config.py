@@ -10,6 +10,9 @@ from codecs import open
 from ConfigParser import SafeConfigParser
 
 
+filesystem_encoding = sys.getfilesystemencoding()
+
+
 CONFIG_FILE_NAME = 'config.ini'
 
 
@@ -30,8 +33,11 @@ def set_config(path=None):
     """
     # préparer le chemin du fichier de config
     if path is None:
-        jdd_generator_path = os.path.dirname(os.path.abspath(__file__))
-        config_file_path = os.path.join(_jdd_generator_path, CONFIG_FILE_NAME)
+        jdd_generator_path = os.path.dirname(
+                os.path.abspath(__file__.decode(filesystem_encoding))
+                )
+
+        config_file_path = os.path.join(jdd_generator_path, CONFIG_FILE_NAME)
 
     else:
         config_file_path = path
