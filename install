@@ -150,6 +150,8 @@ ${proxy_name} : '$proxy'"
         else
                 _debug "Pas de proxy trouvé, utilisation du proxy '${proxy_onera}'"
                 export all_proxy=$proxy_onera
+                export http_proxy=$proxy_onera
+                export https_proxy=$proxy_onera
         fi
 }
 
@@ -187,6 +189,7 @@ _check_pip () {
         # `easy_install` qui ne permet pas d'installer pour l'utilisateur
         # seulement
         wget \
+                --proxy=on \
                 --directory-prefix=${pip_setup_directory} \
                 --timestamping \
                 $pip_setup_url
