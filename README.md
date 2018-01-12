@@ -399,37 +399,38 @@ Le dossier `samples` contient un exemple minimal qui peut servir de base de dép
 Le projet a les dépendances suivantes:
 
 * Python 2.7 (les dépendances sont spécifiées dans `requirements.txt`) :
- * `colour`, pour la gestion des couleurs ;
- * `jinja2`, pour la gestion des templates ;
- * `argparse`, pour la gestion des arguments passés en ligne de commande.
+  * `colour`, pour la gestion des couleurs ;
+  * `jinja2`, pour la gestion des templates ;
+  * `argparse`, pour la gestion des arguments passés en ligne de commande.
 * LaTeX, testé avec TeXLive 2014 (tous les paquets sont standards) :
- * `inputenc`, pour l'entrée ;
- * `babel`, pour la langue ;
- * `fontenc`, pour l'encodage ;
- * `graphicx`, pour les images ;
- * `sans`, pour la police sans empattements ;
- * `microtype`, pour la gestion du crénage ;
- * `geometry`, pour les marges ;
- * `tabularx`, pour des tableaux en pleine largeur ;
- * `booktabs`, pour les lignes des tableaux ;
- * `xcolor`, pour les couleurs ;
- * `colortbl`, pour les cellules de tableau colorées (c'est comme ça que sont générés les bandeaux de couleurs) ;
- * `eso-pic`, pour les images de fond ;
- * `hyperref`, pour les liens ;
- * `url`, pour les liens hypertextes et le formatage des adresses courriel ;
- * `amsmath`, pour les maths ;
- * `amsfonts`, pour les maths ;
- * `amssymb`, pour les maths ;
- * `adjustbox`, pour ? ;
- * `calc`, pour calculer des valeurs ;
- * `ifthen`, pour avoir des structures conditionnelles faciles ;
- * `placeins`, pour forcer les images à rester où on veut ;
- * `import`, pour faciliter les imports relatifs ;
- * `setspace`, pour gérer les interlignes ;
- * `afterpage`, pour exécuter des commandes après un saut de page ;
- * `keyval`, pour passes des options à une macro par clé/valeur.
+  * `inputenc`, pour l'entrée ;
+  * `babel`, pour la langue ;
+  * `fontenc`, pour l'encodage ;
+  * `graphicx`, pour les images ;
+  * `sans`, pour la police sans empattements ;
+  * `microtype`, pour la gestion du crénage ;
+  * `geometry`, pour les marges ;
+  * `tabularx`, pour des tableaux en pleine largeur ;
+  * `booktabs`, pour les lignes des tableaux ;
+  * `xcolor`, pour les couleurs ;
+  * `colortbl`, pour les cellules de tableau colorées (c'est comme ça que sont générés les bandeaux de couleurs) ;
+  * `eso-pic`, pour les images de fond ;
+  * `hyperref`, pour les liens ;
+  * `url`, pour les liens hypertextes et le formatage des adresses courriel ;
+  * `amsmath`, pour les maths ;
+  * `amsfonts`, pour les maths ;
+  * `amssymb`, pour les maths ;
+  * `adjustbox`, pour ? ;
+  * `calc`, pour calculer des valeurs ;
+  * `ifthen`, pour avoir des structures conditionnelles faciles ;
+  * `placeins`, pour forcer les images à rester où on veut ;
+  * `import`, pour faciliter les imports relatifs ;
+  * `setspace`, pour gérer les interlignes ;
+  * `afterpage`, pour exécuter des commandes après un saut de page ;
+  * `keyval`, pour passes des options à une macro par clé/valeur ;
+  * `ucs`, pour une gestion plus large des cacartères Unicode.
 * Bash v4 (pour le script d'installation) :
- * `wget`, pour récupérer Pip.
+  * `wget`, pour récupérer Pip.
 
 Le projet utilise Python 2.7 parce que c'est la seule version disponible dans le milieu d'exécution au labo. Une transition vers Python 3 le jour où ce sera nécessaire ne devrait pas être trop difficile à faire avec `2to3`.
 
