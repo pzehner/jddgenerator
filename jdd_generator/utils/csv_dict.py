@@ -190,6 +190,10 @@ CSV '{}'".format(csv_file).encode(sys.stderr.encoding))
         # remplir les données
         # chaque ligne est convertie en dictionnaire
         for line in data:
+            # si la première colonne est vide, la ligne est ignorée
+            if not line[0]:
+                continue
+
             self.data.append({index[0]: line[index[1]] for index in indexes})
 
     def __getitem__(self, index):
