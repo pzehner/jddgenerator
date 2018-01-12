@@ -359,8 +359,10 @@ photo".format(student=phd.student))
 
         # si le chemin était absolu, `join` ne prend pas en compte le premier
         # arguement
-        directory_pictures_source = os.path.join(os.getcwd(),
-                self.directory_pictures)
+        directory_pictures_source = os.path.join(
+                os.getcwd().decode(sys.getfilesystemencoding()),
+                self.directory_pictures
+                )
 
         # on fait le lien que si le dossien n'existe pas
         if not os.path.isdir(directory_pictures_target):
