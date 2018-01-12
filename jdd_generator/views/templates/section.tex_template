@@ -12,14 +12,14 @@
   \var{ abstract.color|color }
 }
   \jddabstractinfo[%
-    picture=\block{ if abstract.phd.student.picture }%
+    picture={\block{ if abstract.phd.student.picture }%
       \var{ directory_pictures }/\var{ abstract.phd.student.picture }%
-    \block{ endif },
-    email=\var{ abstract.phd.student.email },
-    location=\var{ abstract.phd.student.location },
+    \block{ endif }},
+    email={\var{ abstract.phd.student.email }},
+    location={\var{ abstract.phd.student.location }},
     \block{ with supervizors=abstract.phd.supervizors|selectattr('origin', 'equalto', 'Onera')|list }
     \block{ if supervizors }
-    supervizorsin={%
+    supervizorsin={{%
     \block{ for supervizor in supervizors }
     \block{ if supervizor.title }
     \var{ supervizor.title }~%
@@ -34,7 +34,7 @@
     \par
     \block{ endif }
     \block{ endfor }
-    },
+    }},
     \block{ if supervizors|length > 1 }
     supervizorsinplur=s,
     \block{ endif }
@@ -42,7 +42,7 @@
     \block{ endwith }
     \block{ with supervizors=abstract.phd.supervizors|rejectattr('origin', 'equalto', 'Onera')|list }
     \block{ if supervizors }
-    supervizorsout={%
+    supervizorsout={{%
     \block{ for supervizor in supervizors }
     \block{ if supervizor.title }
     \var{ supervizor.title }~%
@@ -53,7 +53,7 @@
     \par
     \block{ endif }
     \block{ endfor }
-    },
+    }},
     \block{ if supervizors|length > 1 }
     supervizorsoutplur=s,
     \block{ endif }
@@ -61,7 +61,7 @@
     \block{ endwith }
     \block{ with directors=abstract.phd.directors }
     \block{ if directors }
-    directors={%
+    directors={{%
     \block{ for director in directors }
     \block{ if director.title }
     \var{ director.title }~%
@@ -72,17 +72,17 @@
     \par
     \block{ endif }
     \block{ endfor }
-    },
+    }},
     \block{ if directors|length > 1 }
     directorsplur=s,
     \block{ endif }
     \block{ endif }
     \block{ endwith }
-    funding=\var{ abstract.phd.funding },
+    funding={\var{ abstract.phd.funding }},
   ]
 
   \jddabstractcontent[%
-    title=\var{ abstract.phd.title },
+    title={\var{ abstract.phd.title }},
     \block{ with keywords=abstract.keywords }
     \block{ if keywords }
     keywords={\var{ keywords|join(', ') }},
