@@ -51,3 +51,9 @@ trouvé".format(config_file_path).encode(sys.stderr.encoding))
     # charger la config
     with open(config_file_path, 'r', encoding='utf8') as file:
         config.readfp(file)
+
+    # vérifier que le fichier de config est valide
+    for section in ['titles', 'locations', 'booleans', 'others']:
+        if not config.has_section(section):
+            raise ValueError("Le fichier de config \"{}\" \
+n'a pas de section \"[{}]\"".format(config_file_path, section))
