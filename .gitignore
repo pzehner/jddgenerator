@@ -3,3 +3,6 @@
 
 # python stuff
 *.py[cod]
+
+# fichiers générés de l'exemple
+samples/jdd
