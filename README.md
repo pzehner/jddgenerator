@@ -146,6 +146,13 @@ Il est aussi possible d'interagir directement avec les modules de `jdd_generator
 
 L'exemple donne la structure d'utilisation du projet. Il peut être judicieux d'aller lire la section sur le développement pour avoir quelques détails sur la philosophie du programme. Les modules à utiliser correspondent aux contrôleurs du projet, ils fournissent les commandes pour générer les documents LaTeX depuis les fichiers d'entrée. Trois modules, correspondant aux trois contrôleurs, sont disponibles.
 
+Avant toute manipulation des contrôleurs, il est nécessaire de charger la configuration du programme :
+
+```python
+from jdd_generator.config import set_config
+set_config()
+```
+
 Le contrôleur du planning s'utilise comme ceci :
 
 ```python
