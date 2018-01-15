@@ -111,7 +111,8 @@ class Abstract(object):
         keywords (:obj:`list` of unicode): liste des mots-clés.
         text (unicode): résumé proprement dit.
         color (:obj:`colour.Color`): couleur du bandeau du résumé.
-        section (int): numéro de section à laquelle appartient le résumé.
+        section_number (int): numéro de section à laquelle appartient le
+            résumé.
         order (int): numéro du résumé dans la section.
 
     """
@@ -123,7 +124,7 @@ class Abstract(object):
             keywords=[],
             text="",
             color=Color('red'),
-            section=0,
+            section_number=0,
             order=0
             ):
 
@@ -133,7 +134,7 @@ class Abstract(object):
             keywords = [keywords]
 
         self.keywords = keywords
-        self.section = section
+        self.section_number = section_number
         self.order = order
         self.color = color
         self.phd = None

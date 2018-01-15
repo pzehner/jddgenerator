@@ -274,7 +274,7 @@ n'est attribuée à aucun jour".format(
 
             # ajouter les infos de timing à la présentation
             presentation.day = int(timing['day'])
-            presentation.session = int(timing['session'])
+            presentation.session_number = int(timing['session'])
             presentation.order = int(timing['order'])
             presentation.duration = timedelta(
                     minutes=int(timing['length'])
@@ -317,6 +317,7 @@ n'est attribuée à aucun jour".format(
             # À présent, entrer les temps de début et de fin de chaque
             # présentation selon leur durée et l'heure de début.
             start = session.start
+            stop = start
             for presentation in presentations:
                 # temps de début
                 presentation.start = start
@@ -350,7 +351,7 @@ n'est attribuée à aucun jour".format(
             à cette session.
 
         """
-        return [p for p in self.presentations if p.session == number]
+        return [p for p in self.presentations if p.session_number == number]
 
     def _get_presentation_by_code(self, code):
         """Retourne une présentation par son code.

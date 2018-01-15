@@ -258,6 +258,7 @@ photo".format(student=phd.student))
                 abstract=abstract
                 ))
 
+
     def _apply_repartitions(self, repartitions_file):
         """Extraire les données de répartition.
 
@@ -289,8 +290,17 @@ photo".format(student=phd.student))
 
                 continue
 
+            # vérifier que le résumé a bien une thèse attribuée
+            if abstract.phd is None:
+                self.logger.warning("Le résumé \"{code}\" n'est pas \
+associé à une thèse".format(
+                    code=abstract.code
+                    ))
+
+                continue
+
             # on récupère les infos qui nous intéressent
-            abstract.section = int(repartition['session'])
+            abstract.section_number = int(repartition['session'])
             abstract.order = int(repartition['order'])
 
             self.logger.debug("Ajoute les infos de répartition au résumé \
@@ -330,7 +340,7 @@ photo".format(student=phd.student))
             section.
 
         """
-        return [a for a in self.abstracts if a.section == number]
+        return [a for a in self.abstracts if a.section_number == number]
 
     def _get_abstract_by_code(self, code):
         """Retourne un résumé par son code.
