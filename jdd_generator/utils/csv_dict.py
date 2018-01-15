@@ -6,7 +6,7 @@ import csv
 import os
 import sys
 import string
-from codecs import open
+from codecs import open, BOM_UTF8
 
 from ConfigParser import SafeConfigParser
 
@@ -151,10 +151,16 @@ clé 'file' dans la section 'info'".encode(sys.stderr.encoding))
             raise IOError("Impossible de trouver le fichier \
 CSV '{}'".format(csv_file).encode(sys.stderr.encoding))
 
+        # détecter si le fichier CSV est encodé en UTF-8 avec ou sans BOM
+        # https://stackoverflow.com/a/13591421
+        bytes_amount = min(32, os.path.getsize(csv_file))
+        raw = open(csv_file, 'rb').read(bytes_amount)
+        encoding = 'utf-8-sig' if raw.startswith(BOM_UTF8) else 'utf-8'
+
         # lire le fichier csv
         # on utilise le délimiteur adéquat
         # on skippe les premières lignes avec `skip`
-        with open(csv_file, 'r', encoding='utf-8') as file:
+        with open(csv_file, 'r', encoding=encoding) as file:
             return list(
                     unicode_csv_reader(
                         file,
