@@ -329,7 +329,7 @@ _pip_install_dependencies () {
                 error_code=$?
         else
                 _debug "Installation désactivée en mode dry-run"
-                install_error=0
+                error_code=0
         fi
 
         # on vérifie que tout s'est bien passé
@@ -349,7 +349,7 @@ _error () {
         ##
         # Afficher une erreur
         #
-        >&2 printf "$(tput sgr 0; tput bold)[$(tput setaf 1)ERROR$(tput setaf 9)] %s$(tput sgr 0)\n" "$@"
+        >&2 printf "$(tput sgr 0; tput bold)[$(tput setaf 1)ERROR$(tput setaf 7)] %s$(tput sgr 0)\n" "$@"
 }
 
 _warning () {
