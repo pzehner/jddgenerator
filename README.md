@@ -299,16 +299,16 @@ L'ordre (`order`) est propre à la session.
 #### Fichier `planning_file`
 
 
-| Champ        | Description                                                                               |
-|--------------|-------------------------------------------------------------------------------------------|
-| `type`       | type d'événement (le type sera indiqué dans le plannig), si c'est une session, l'indiquer |
-| `number`     | numéro de l'événement pour le type donné                                                  |
-| `day`        | jour de début dans le format ISO 8601 (`aaaa-mm-jj`)                                      |
-| `start`      | heure de début (`hh:mm`)                                                                  |
-| `stop`       | heure de fin (`hh:mm`)                                                                    |
-| `chairman`   | animateur/responsable de l'événement                                                      |
-| `color`      | couleur du bandeau de l'événement (si la couleur commence par # elle est traitée en hexa) |
-| `color-mode` | mode de représentation de la couleur (rgb, hsl... peut être vide)                         |
+| Champ        | Description                                          | Remarques                                                                                                                        |
+|--------------|------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------|
+| `type`       | type d'événement                                     | le type (pause, session, intro, etc.) est indiqué tel quel dans le plannig ; seul le type `session` peut avoir des présentations |
+| `number`     | numéro de l'événement pour le type donné             |                                                                                                                                  |
+| `day`        | jour de début dans le format ISO 8601 (`aaaa-mm-jj`) |                                                                                                                                  |
+| `start`      | heure de début (`hh:mm`)                             |                                                                                                                                  |
+| `stop`       | heure de fin (`hh:mm`)                               |                                                                                                                                  |
+| `chairman`   | animateur/responsable de l'événement                 |                                                                                                                                  |
+| `color`      | couleur du bandeau de l'événement                    | si la couleur commence par # elle est traitée en hexa                                                                            |
+| `color-mode` | mode de représentation de la couleur                 | `rgb`, `hsl`... peut être vide                                                                                                   |
 
 
 #### Fichier `abstracts_file`
