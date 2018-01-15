@@ -41,7 +41,7 @@ def set_config(path=None):
 
     else:
         config_file_path = path
-        logger.info("Charge le fichier de config \"{}\"".format(config_file_path))
+        logger.info("Fichier de config à utiliser : \"{}\"".format(config_file_path))
 
     # vérifier que le fichier existe
     if not os.path.isfile(config_file_path):
