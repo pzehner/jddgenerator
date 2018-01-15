@@ -324,11 +324,11 @@ L'ordre (`order`) est propre à la session.
 #### Fichier `booklet_file`
 
 
-| Champ        | Description                          | Remarques                                                |
-|--------------|--------------------------------------|----------------------------------------------------------|
-| `number`     | numéro de la section                 |                                                          |
-| `color`      | couleur du bandeau de l'événement    | si la couleur commence par `#` elle est traitée en hexa) |
-| `color-mode` | mode de représentation de la couleur | `rgb`, `hsl`... peut être vide                           |
+| Champ        | Description                          | Remarques                                               |
+|--------------|--------------------------------------|---------------------------------------------------------|
+| `number`     | numéro de la section                 |                                                         |
+| `color`      | couleur du bandeau de l'événement    | si la couleur commence par `#` elle est traitée en hexa |
+| `color-mode` | mode de représentation de la couleur | `rgb`, `hsl`... peut être vide                          |
 
 
 ### Dossier de photos
