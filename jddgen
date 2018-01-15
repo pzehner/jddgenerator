@@ -43,7 +43,7 @@ from jdd_generator.controllers.jdd import (
         OUTPUT_DIRECTORY,
         )
 
-from jdd_generator.config import set_config as set_config
+from jdd_generator.config import set_config
 
 
 logger = logging.getLogger('jddgen')

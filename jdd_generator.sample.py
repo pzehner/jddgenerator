@@ -17,6 +17,9 @@ from __future__ import absolute_import
 import logging
 logging.basicConfig(level=logging.INFO)
 
+# imorter l'outil de configuration du projet
+from jdd_generator.config import set_config
+
 # importer les contrôleurs du projet
 from jdd_generator.controllers.planning import PlanningController
 from jdd_generator.controllers.booklet import BookletController
@@ -24,6 +27,9 @@ from jdd_generator.controllers.jdd import JddController
 
 
 if __name__ == '__main__':
+    # charger la configuration depuis le fichier par défaut
+    set_config()
+
     # dossier de sortie
     output_directory = 'jdd'
 
