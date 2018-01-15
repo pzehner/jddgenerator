@@ -116,3 +116,16 @@ def format_printable(value):
     """
     control_map = dict.fromkeys(range(32))
     return value.translate(control_map)
+
+def equalto_case_insensitive(value1, value2):
+    """Test d'égalité de deux chaînes de caractères sans prendre en compte la
+    casse
+
+    Args:
+        value1 (unicode): première chaîne.
+        value2 (unicode): seconde chaîne.
+
+    Returns:
+        bool: vrai si les deux chaînes sont égales à la casse près.
+    """
+    return value1.lower() == value2.lower()

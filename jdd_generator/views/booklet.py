@@ -6,6 +6,7 @@ import logging
 import os
 
 from ..utils import utils
+from ..config import config
 from .jdd import BasicView, TEMPLATE_DIRECTORY
 
 
@@ -70,7 +71,7 @@ class BookletView(BasicView):
             section_dict = utils.todict(section)
             sections_dict.append(section_dict)
 
-            # demender un rendu
+            # demander un rendu
             section_content = self._retrieve_section(section_dict)
             section_dict['file_name'] = section_content['file_name']
             files_content.append(section_content)
@@ -105,6 +106,10 @@ class BookletView(BasicView):
 
         # ajouter le dossier des photos
         section_dict['directory_pictures'] = PICTURES_TARGET_DIRECTORY
+
+        # ajouter la config 'others' comme variable globale, sous forme de
+        # dictionaire
+        section_dict['config_others'] = dict(config.items('others'))
 
         # rendre la section
         text = template.render(section_dict)

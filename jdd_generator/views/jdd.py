@@ -90,7 +90,12 @@ class BasicView(object):
             autoescape=False,
             )
 
+    # load filters
     environment.filters['time'] = utils.format_time
     environment.filters['date'] = utils.format_date
     environment.filters['color'] = utils.format_color
     environment.filters['printable'] = utils.format_printable
+
+    # load tests
+    environment.tests['equalto_case_insensitive'] = \
+            utils.equalto_case_insensitive

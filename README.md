@@ -377,7 +377,15 @@ La clé `disabled` permet de désactiver le traitement des centres. Dans ce cas,
 Cette section définit la valeur booléenne de certaines chaînes de caractères. C'est en particulier utilisé pour interpréter le champ `come` de `students_file`.
 
 
-### Fichier générés
+#### Autres paramètres dans `[others]`
+
+
+Cette section permet de stocker des paramètres généraux :
+
+* `institute`: le nom du labo. Ceci est notamment utilisé pour distinguer les encadrants internes et les encadrants externes. La comparaison n'est pas sensible à la casse.
+
+
+### Fichiers générés
 
 
 Le générateur crée les différents fichiers LaTeX dans un dossier de sortie. Il génère également un fichier `jdd.tex` qui est le fichier principal à compiler. Il génère le planning dans le sous dossier `planning` et le recueil dans le sous dossier `booklet`. Pour les deux, il crée un fichier par session/section, qui porte un numéro, et un fichier principal qui a l'extension `.tex.sample`. Ce fichier ne doit pas être modifié, car il sera écrasé à chaque appel du générateur. Pour le modifier, il suffit de remplacer son extension par `.tex`. Le fichier principal `jdd.tex` importe automatiquement le fichier en `.tex`, sauf s'il n'existe pas auquel cas il importe le fichier `.tex.sample`.

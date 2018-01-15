@@ -17,7 +17,7 @@
     \block{ endif }},
     email={\var{ abstract.phd.student.email }},
     location={\var{ abstract.phd.student.location }},
-    \block{ with supervizors=abstract.phd.supervizors|selectattr('origin', 'equalto', 'Onera')|list }
+    \block{ with supervizors=abstract.phd.supervizors|selectattr('origin', 'equalto_case_insensitive', config_others.institute)|list }
     \block{ if supervizors }
     supervizorsin={{%
     \block{ for supervizor in supervizors }
@@ -40,7 +40,7 @@
     \block{ endif }
     \block{ endif }
     \block{ endwith }
-    \block{ with supervizors=abstract.phd.supervizors|rejectattr('origin', 'equalto', 'Onera')|list }
+    \block{ with supervizors=abstract.phd.supervizors|rejectattr('origin', 'equalto_case_insensitive', config_others.institute)|list }
     \block{ if supervizors }
     supervizorsout={{%
     \block{ for supervizor in supervizors }
