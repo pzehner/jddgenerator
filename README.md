@@ -307,7 +307,7 @@ L'ordre (`order`) est propre à la session.
 | `start`      | heure de début (`hh:mm`)                             |                                                                                                                                  |
 | `stop`       | heure de fin (`hh:mm`)                               |                                                                                                                                  |
 | `chairman`   | animateur/responsable de l'événement                 |                                                                                                                                  |
-| `color`      | couleur du bandeau de l'événement                    | si la couleur commence par # elle est traitée en hexa                                                                            |
+| `color`      | couleur du bandeau de l'événement                    | si la couleur commence par `#` elle est traitée en hexa                                                                          |
 | `color-mode` | mode de représentation de la couleur                 | `rgb`, `hsl`... peut être vide                                                                                                   |
 
 
@@ -324,11 +324,11 @@ L'ordre (`order`) est propre à la session.
 #### Fichier `booklet_file`
 
 
-| Champ        | Description                                                                               |
-|--------------|-------------------------------------------------------------------------------------------|
-| `number`     | numéro de la section                                                                      |
-| `color`      | couleur du bandeau de l'événement (si la couleur commence par # elle est traitée en hexa) |
-| `color-mode` | mode de représentation de la couleur (rgb, hsl... peut être vide)                         |
+| Champ        | Description                          | Remarques                                                |
+|--------------|--------------------------------------|----------------------------------------------------------|
+| `number`     | numéro de la section                 |                                                          |
+| `color`      | couleur du bandeau de l'événement    | si la couleur commence par `#` elle est traitée en hexa) |
+| `color-mode` | mode de représentation de la couleur | `rgb`, `hsl`... peut être vide                           |
 
 
 ### Dossier de photos
@@ -446,4 +446,4 @@ J'ai beaucoup hésité à utiliser des dépendances, vu à quel point l'environn
 
 Ce projet sépare ses différentes parties selon la philosophie MVC (Modèle, Vue, Contrôler). Dans l'idée, le modèle représente les données que l'on traite, la vue s'occupe d'afficher ces données (ici, en fichier LaTeX) et le contrôleur s'occupe de tout le reste (lire les fichiers d'entrée, mettre leurs données dans les modèles, mettre en forme tout ça avec les vues et écrire le résultat sur le disque). Pour plus d'informations sur cette philosophie de développement, je conseille cette bonne introduction du [site de Sam et Max](http://sametmax.com/quest-de-que-mvc-et-a-quoi-ca-sert/). Pour le projet, les modèles sont dans `jdd_generator/models`, les vues dans `jdd_generator/views` et les contrôleurs dans `jdd_generator/controllers`.
 
-Le projet utilise Jinja2 pour les vues. Les fichiers de template sont dans le dossier `jdd_generator/views/templates`. La syntaxe de Jinja2 a été adaptée à la syntaxe de LaTeX, donc les habitués de ce moteur de template auront besoin d'un petit temps d'adaptation. Afin de simplifier les templates autant que possible, beaucoup de macros et d'environnements ont été créés. Ils sont définis dans le template du fichier principal.
+Le projet utilise Jinja2 pour les vues. Les fichiers de template sont dans le dossier `jdd_generator/views/templates`. La syntaxe de Jinja2 a été adaptée à la syntaxe de LaTeX, donc les habitués de ce moteur de template auront besoin d'un petit temps d'adaptation. Afin de simplifier les templates autant que possible, beaucoup de macros et d'environnements LaTeX ont été créés. Ils sont définis dans le template du fichier principal `jdd_generator/views/templates/jdd.tex`.
